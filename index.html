@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de Leads</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B0D0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Leads">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F6F4;--card:#fff;--ink:#0B0D0C;--ink2:#3D423F;--mut:#7A807C;--line:#E6E8E5;--soft:#FAFBFA;
+--side:#0B0D0C;--side2:#171B19;--g:#0E9F6E;--gd:#087A54;--gl:#E7F6EF;--r:#E5484D;--rl:#FDECEC;--a:#D97706;--al:#FEF3E2;--b:#2563EB;--bl:#E8EFFD;--v:#6D4AFF;--vl:#F0EBFF;--rad:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+/* sidebar */
+.side{background:var(--side);color:#fff;padding:20px 12px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 10px 18px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--g);display:grid;place-items:center;font-weight:800}
+.brand b{font-size:15px}.brand small{display:block;color:#8C938F;font-size:11px}
+.sec{color:#6B726E;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:14px 12px 6px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;color:#C9CECB;cursor:pointer;border:0;background:none;width:100%;text-align:left;font-weight:500;font-size:13.5px}
+.nav:hover{background:var(--side2);color:#fff}.nav.on{background:var(--side2);color:#fff;box-shadow:inset 3px 0 0 var(--g)}
+.nav .ic2{width:18px;text-align:center;opacity:.9}
+.cnt{margin-left:auto;font-size:11px;background:#262C29;padding:1px 8px;border-radius:20px;color:#C9CECB;font-weight:600}
+.cnt.al{background:var(--r);color:#fff}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;box-shadow:0 0 0 1.5px rgba(150,158,154,.55)}
+.side-foot{margin-top:auto;font-size:11px;color:#6B726E;padding:12px;line-height:1.6}
+.side-foot a{color:#9CA3A0;cursor:pointer;text-decoration:underline}
+/* main */
+main{padding:24px 30px 80px;min-width:0}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.top h1{font-size:24px;font-weight:800;letter-spacing:-.6px}.top .sub{color:var(--mut);font-size:13px;margin-top:2px}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:0 12px;height:38px;width:240px}
+.search input{border:0;outline:0;background:none;width:100%}
+.sel,.inp{height:38px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:0 10px}
+.btn{height:38px;border-radius:10px;border:1px solid var(--line);background:var(--card);padding:0 14px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none}
+.btn:hover{border-color:#BFC5C1}.btn.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.g{background:var(--g);color:#fff;border-color:var(--g)}.btn.g:hover{background:var(--gd)}
+.btn.sm{height:30px;padding:0 10px;font-size:12px;border-radius:8px}
+.btn.red{color:var(--r)}
+.chk{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px;cursor:pointer;user-select:none}
+.demo-tag{background:var(--al);color:#8A4B00;border:1px solid #F5D7A8;padding:6px 12px;border-radius:9px;font-size:12px;font-weight:700}
+/* cards */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:15px 17px}
+.kpi .l{color:var(--mut);font-size:12px;font-weight:600}.kpi .v{font-size:28px;font-weight:800;letter-spacing:-1px;margin-top:5px}
+.kpi .d{font-size:12px;color:var(--mut);margin-top:2px}
+.kpi.red{border-color:#F6C9CA;background:linear-gradient(180deg,#fff,#FFF7F7)}.kpi.red .v{color:var(--r)}.kpi.grn .v{color:var(--g)}
+.up{color:var(--g);font-weight:700}.down{color:var(--r);font-weight:700}
+.grid{display:grid;gap:14px;margin-bottom:14px}.g2{grid-template-columns:1.6fr 1fr}.g2e{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:18px;min-width:0}
+.panel h3{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.panel h3 small{color:var(--mut);font-weight:500;font-size:12px;margin-left:auto}
+.hint{color:var(--mut);font-size:12px}
+.empty{padding:40px 20px;text-align:center;color:var(--mut)}
+/* bars */
+.frow{display:grid;grid-template-columns:130px 1fr 60px;align-items:center;gap:10px;font-size:13px;margin-bottom:9px}
+.fbar{height:10px;background:#EEF0ED;border-radius:6px;overflow:hidden}.fbar i{display:block;height:100%;border-radius:6px}
+.frow b{text-align:right;font-size:12px}
+/* funnel */
+.fun{display:flex;flex-direction:column;gap:6px}
+.fun .st{display:flex;align-items:center;gap:12px}
+.fun .bx{height:36px;border-radius:8px;display:flex;align-items:center;padding:0 12px;color:#fff;font-weight:700;font-size:13px;min-width:46px}
+.fun .pc{font-size:12px;color:var(--mut)}
+/* heat */
+.heat{display:grid;grid-template-columns:34px repeat(24,1fr);gap:2px;font-size:10px;color:var(--mut)}
+.heat i{aspect-ratio:1;border-radius:3px;display:block}
+/* table */
+.tw{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);overflow:hidden}
+.th{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.th h3{font-size:14px;font-weight:700}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);font-weight:700;padding:10px 16px;background:var(--soft);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr.row{cursor:pointer}tr.row:hover td{background:var(--soft)}
+tr.late td:first-child{box-shadow:inset 3px 0 0 var(--r)}
+.who b{display:block;font-weight:600}.who span{color:var(--mut);font-size:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.s0{background:var(--rl);color:var(--r)}.s1{background:var(--bl);color:var(--b)}.s2{background:var(--al);color:var(--a)}.s3{background:var(--vl);color:var(--v)}.s4{background:var(--gl);color:var(--gd)}.s5{background:#EFF0EF;color:#6B726E}
+.tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#F1F2F0;color:var(--ink2);white-space:nowrap}
+.tag.ant{background:var(--ink);color:#fff}.tag.dup{background:var(--al);color:#8A4B00}
+.acts{display:flex;gap:6px;justify-content:flex-end;align-items:center}
+.ic{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);display:grid;place-items:center;background:#fff;cursor:pointer;flex:none}
+.ic:hover{border-color:var(--g);background:var(--gl)}.ic[disabled]{opacity:.3;pointer-events:none}.ic svg{width:15px;height:15px}
+.age{font-size:12px;color:var(--mut)}.age.red{color:var(--r);font-weight:600}
+.emp{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.qs{border:1px solid var(--line);border-radius:8px;padding:4px 6px;font-size:12px;background:#fff;cursor:pointer}
+/* hoje */
+.todo{display:flex;flex-direction:column}
+.ti{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.ti:last-child{border:0}
+.ti .who{flex:1;min-width:0;cursor:pointer}.ti .who b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+/* kanban */
+.kb{display:grid;grid-template-columns:repeat(6,minmax(200px,1fr));gap:12px;overflow-x:auto;padding-bottom:10px}
+.col{background:#EDEFEC;border-radius:12px;padding:10px;min-height:300px;display:flex;flex-direction:column;gap:8px}
+.col.over{outline:2px dashed var(--g);background:var(--gl)}
+.col h4{font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;padding:2px 4px 6px;text-transform:uppercase;letter-spacing:.6px}
+.col h4 span{margin-left:auto;color:var(--mut)}
+.col .sum{font-size:11px;color:var(--mut);padding:0 4px;margin-top:-6px}
+.kc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 11px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.kc:active{cursor:grabbing}.kc.late{border-left:3px solid var(--r)}
+.kc b{display:block;font-size:13px}.kc .m{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:var(--mut);flex-wrap:wrap}
+/* agenda */
+.cal{overflow-x:auto}
+.cal table{border-collapse:separate;border-spacing:2px;min-width:900px}
+.cal th,.cal td{padding:0;border:0;background:none;text-align:center;font-size:11px}
+.cal th{padding:4px 0;color:var(--mut)}
+.cal td.bn{text-align:left;font-weight:700;padding-right:8px;font-size:12px;white-space:nowrap}
+.cal td.c{height:30px;background:#EFF1EE;border-radius:4px;cursor:default}
+.cal td.c.oc{background:var(--g);cursor:pointer}.cal td.c.pe{background:#9ED9C1;cursor:pointer}.cal td.c.cf{background:var(--r);cursor:pointer}
+.cal td.c.td{outline:2px solid var(--ink)}
+.cal th.we{color:#B6BCB8}
+/* notes */
+.notes{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:120px}
+.note.pin{border-color:#BFE8D6;background:linear-gradient(180deg,#fff,#F3FBF7)}
+.note b{font-size:14px}.note p{color:var(--ink2);font-size:13px;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.note .m{margin-top:auto;display:flex;gap:6px;align-items:center;font-size:11px;color:var(--mut)}
+/* drawer & modal */
+.ov{position:fixed;inset:0;background:rgba(11,13,12,.38);opacity:0;pointer-events:none;transition:.2s;z-index:30}
+.ov.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:500px;max-width:100%;background:#fff;z-index:31;transform:translateX(100%);transition:.25s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.14)}
+.drawer.on{transform:none}
+.dh{padding:20px 22px 0;border-bottom:1px solid var(--line)}
+.dh .x{float:right;border:0;background:none;font-size:24px;cursor:pointer;color:var(--mut);line-height:1}
+.dh h2{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-top:6px}.dh p{color:var(--mut);font-size:13px;margin-top:3px}
+.tabs{display:flex;gap:4px;margin-top:14px}
+.tab{border:0;background:none;padding:9px 12px;font-weight:600;color:var(--mut);cursor:pointer;border-bottom:2px solid transparent;font-size:13px}
+.tab.on{color:var(--ink);border-color:var(--g)}
+.db{padding:18px 22px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;outline:0}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--g)}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.info{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:13px;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;font-size:13px}
+.info span{display:block;color:var(--mut);font-size:11px;font-weight:600}.info .full{grid-column:1/-1}
+.tpl{border:1px solid var(--line);border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:10px}
+.tpl b{font-size:13px;display:block}.tpl small{color:var(--mut);font-size:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tl{border-left:2px solid var(--line);margin-left:6px;padding-left:16px;display:flex;flex-direction:column;gap:14px}
+.tl div{position:relative;font-size:13px}.tl div::before{content:"";position:absolute;left:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--g);border:2px solid #fff}
+.tl small{display:block;color:var(--mut);font-size:11px}
+.df{padding:14px 22px;border-top:1px solid var(--line);display:flex;gap:10px}.df .btn{flex:1;justify-content:center}
+.callout{border-radius:12px;padding:11px 13px;font-size:13px}
+.callout.g{background:var(--gl);border:1px solid #BFE8D6;color:var(--gd)}.callout.a{background:var(--al);border:1px solid #F5D7A8;color:#8A4B00}.callout.r{background:var(--rl);border:1px solid #F6C9CA;color:#B4232A}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%) scale(.98);background:#fff;border-radius:16px;z-index:41;width:480px;max-width:calc(100% - 24px);max-height:90vh;overflow:auto;opacity:0;pointer-events:none;transition:.18s;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.modal .mh{padding:18px 20px;border-bottom:1px solid var(--line);font-weight:800;font-size:17px}
+.modal .mb{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+.ov2{position:fixed;inset:0;background:rgba(11,13,12,.45);z-index:40;opacity:0;pointer-events:none;transition:.18s}.ov2.on{opacity:1;pointer-events:auto}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-weight:600;opacity:0;transition:.25s;z-index:60;max-width:90%}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.loading{padding:80px;text-align:center;color:var(--mut)}
+.login{max-width:360px;margin:12vh auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px}
+/* settings */
+.set h4{font-size:13px;margin-bottom:8px}
+.erow{display:grid;grid-template-columns:28px 1.4fr 110px 2fr 36px;gap:8px;align-items:center;margin-bottom:8px}
+.erow input[type=color]{width:28px;height:28px;border:0;padding:0;background:none;cursor:pointer}
+.mrow{display:grid;grid-template-columns:1fr 2.6fr 36px;gap:8px;margin-bottom:8px;align-items:start}
+.mrow textarea{min-height:58px}
+.prow{display:grid;grid-template-columns:2fr 90px 36px;gap:8px;margin-bottom:6px}
+@media print{.side,.tools,.btn,.no-print{display:none!important}.app{display:block}main{padding:0}body{background:#fff}.panel,.kpi{break-inside:avoid}}
+@media(max-width:1200px){.g2,.g3{grid-template-columns:1fr}}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:sticky;top:0;z-index:20;height:auto;flex-direction:row;overflow-x:auto;padding:8px;gap:4px}
+  .brand,.sec,.side-foot{display:none}.nav{white-space:nowrap;width:auto;padding:8px 10px}
+  main{padding:16px 12px 80px}.search{width:100%}.tools{width:100%}.g2e{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}.kpi .v{font-size:24px}
+  table.resp thead{display:none}table.resp tr{display:block;border-bottom:1px solid var(--line);padding:8px 4px}
+  table.resp td{display:flex;justify-content:space-between;gap:10px;border:0;padding:5px 12px}
+  table.resp td::before{content:attr(data-l);color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase}
+  table.resp td.who{display:block}table.resp td.who::before,table.resp td.ac::before{display:none}
+  .r3{grid-template-columns:1fr 1fr}.erow{grid-template-columns:28px 1fr 90px;}.erow .pid{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="side" id="side"></aside>
+  <main id="main"><div class="loading">Carregando…</div></main>
+</div>
+<div class="ov" id="ov"></div>
+<aside class="drawer" id="drawer"></aside>
+<div class="ov2" id="ov2"></div>
+<div class="modal" id="modal"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =================== BASE =================== */
+const STATUS=['Novo','Em conversa','Orçamento enviado','Agendado','Fechado','Perdido'];
+const STC=['#E5484D','#2563EB','#D97706','#6D4AFF','#0E9F6E','#9CA3A0'];
+const ABERTOS=['Novo','Em conversa','Orçamento enviado','Agendado'];
+const IS_GAS=typeof google!=='undefined'&&google.script&&google.script.run;
+const API_URL='https://script.google.com/macros/s/AKfycbzRgZ6YjVBvDxV3AXD7d7suRAac1Sk407uE1pGWmfVvGIA9_5nhMiXtdy3Gv14s1UDYMw/exec';
+const IS_API=!IS_GAS&&/^https?:/.test(location.protocol)&&!/[?&]demo/.test(location.search);
+let DB=null,CFG=null,PAPEL='admin',SENHA='',VIEW='hoje',EMP='all',STAT='Todos',CUR=null,DTAB='dados',DEMO=!IS_GAS&&!IS_API,KNOWN=null;
+let CAL_MES=new Date();CAL_MES.setDate(1);
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const st=k=>{try{return localStorage.getItem(k)}catch(e){return null}},sst=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+SENHA=st('pl_senha')||'';
+if((IS_GAS||IS_API)&&st('pl_demo')==='1')DEMO=true;
+function viaApi(fn,a){return fetch(API_URL,{method:'POST',body:JSON.stringify({fn,args:a,senha:SENHA})}).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.erro);return j.r})}
+
+function api(fn,...a){
+  if(DEMO)return Promise.resolve(demoApi(fn,a));
+  if(IS_API)return viaApi(fn,a);
+  return new Promise((ok,ko)=>{const r=google.script.run.withSuccessHandler(ok).withFailureHandler(ko);r[fn](SENHA,...a)});
+}
+/* =================== LOAD =================== */
+function carregar(silent){
+  if(!silent)$('#main').innerHTML='<div class="loading">Carregando contatos…</div>';
+  const p=DEMO?Promise.resolve(JSON.stringify(demoDados())):IS_API?viaApi('getDados',[]):new Promise((ok,ko)=>google.script.run.withSuccessHandler(ok).withFailureHandler(ko).getDados(SENHA));
+  p.then(j=>{
+    const d=JSON.parse(j);
+    if(d.login){return telaLogin();}
+    const novos=KNOWN?prep(d).all.filter(l=>!KNOWN.has(l._key)&&!l._teste):[];
+    DB=prep(d);CFG=d.cfg;PAPEL=d.papel;
+    if(!KNOWN)KNOWN=new Set(DB.all.map(l=>l._key));
+    if(novos.length){novos.forEach(l=>KNOWN.add(l._key));toast(`🔔 ${novos.length} novo(s) contato(s): ${novos.map(l=>l.Nome).join(', ')}`);document.title=`(${novos.length}) Painel de Leads`;}
+    if(PAPEL!=='admin')EMP=PAPEL;
+    if(silent&&($('#drawer').classList.contains('on')||$('#modal').classList.contains('on')))return renderSide();
+    render();
+  }).catch(e=>{if(!silent)$('#main').innerHTML='<div class="empty">Erro ao carregar: '+esc(e.message||e)+'</div>'});
+}
+setInterval(()=>{if(document.visibilityState==='visible')carregar(true)},120000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')document.title='Painel de Leads'});
+
+function normSt(s){s=String(s||'').trim();if(!s||/solicita/i.test(s))return'Novo';const f=STATUS.find(x=>x.toLowerCase()===s.toLowerCase());return f||s}
+const dig=v=>String(v||'').replace(/\D/g,'').slice(-11);
+function prep(d){
+  const all=[];
+  Object.entries(d.empresas).forEach(([k,e])=>e.leads.forEach(l=>{
+    l._emp=k;l._key=k+'|'+l.ID;l._st=normSt(l.Status);l._dt=new Date(l.Recebido_em);l._teste=/teste/i.test(l.Nome||'');
+    l._fone=dig(l.WhatsApp);l._canal=l.Canal||(/site/i.test(l.Origem||'')||!l.Canal?'Site':'Outro');l._valor=Number(String(l.Valor||'').replace(',','.'))||0;
+    l._resp=l.Primeira_Resposta?(new Date(l.Primeira_Resposta)-l._dt)/36e5:null;all.push(l);
+  }));
+  all.sort((a,b)=>b._dt-a._dt);
+  const porFone={};all.forEach(l=>{if(l._fone.length>=10&&!l._teste)(porFone[l._fone]=porFone[l._fone]||[]).push(l)});
+  all.forEach(l=>{const g=porFone[l._fone]||[];l._outras=g.filter(x=>x!==l);l._antigo=g.some(x=>x._dt<l._dt)});
+  d.all=all;d.hist=(d.historico||[]);d.notas=(d.notas||[]);d.procs=(d.procedimentos||[]);return d;
+}
+/* =================== HELPERS =================== */
+const empCfg=k=>(CFG.empresas.find(e=>e.key===k)||{nome:k,cor:'#999',tipo:'padrao'});
+const temTipo=t=>CFG.empresas.some(e=>e.tipo===t&&(EMP==='all'||EMP===e.key)&&DB.empresas[e.key]);
+const hideT=()=>st('pl_hide')!=='0';
+function escopo(){return DB.all.filter(l=>(EMP==='all'||l._emp===EMP)&&(!hideT()||!l._teste))}
+function periodo(arr){const p=+(st('pl_per')||30);if(!p)return arr;const lim=Date.now()-p*864e5;return arr.filter(l=>l._dt>=lim)}
+function busca(arr){const q=(st('pl_q')||'').toLowerCase();if(!q)return arr;return arr.filter(l=>[l.Nome,l.WhatsApp,l.Email,l.Mensagem,l.Procedimento,l.Baia,l.Observacoes,l._canal].join(' ').toLowerCase().includes(q))}
+const horas=l=>(Date.now()-l._dt)/36e5;
+const atrasado=l=>l._st==='Novo'&&horas(l)>CFG.alertaHoras;
+const hojeISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const addDias=n=>{const d=new Date(Date.now()+n*864e5);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function fone(v){let n=String(v||'').replace(/\D/g,'');if(n.length===10||n.length===11)n='55'+n;return n.length>=12?n:''}
+function fmtFone(v){const n=dig(v);if(n.length<10)return'—';return n.length===11?`(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`:`(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`}
+function fmtData(d){return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})+' · '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}
+function dia(s){if(!s)return null;const x=String(s);return new Date(x.length===10?x+'T12:00:00':x)}
+function fmtDia(s){const d=dia(s);return!d||isNaN(d)?'':d.toLocaleDateString('pt-BR')}
+function idade(l){const h=horas(l);if(h<1)return Math.max(1,Math.round(h*60))+' min';if(h<24)return Math.floor(h)+'h';return Math.floor(h/24)+'d'}
+const R$=v=>'R$ '+Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const R$k=v=>v>=1e6?'R$ '+(v/1e6).toFixed(1).replace('.',',')+'M':v>=1e3?'R$ '+(v/1e3).toFixed(1).replace('.',',')+'k':R$(v);
+const pill=s=>`<span class="pill s${Math.max(0,STATUS.indexOf(s))}">${esc(s)}</span>`;
+const empTag=k=>{const e=empCfg(k);return`<span class="emp"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}</span>`};
+const curto=n=>String(n).replace(' Coiffeur','');
+function modelos(k){return(CFG.modelos[k]&&CFG.modelos[k].length?CFG.modelos[k]:CFG.modelos.padrao)||[]}
+function preencher(m,l){return m.replace(/\{primeiro\}/g,String(l.Nome||'').split(' ')[0].replace(/^./,c=>c.toUpperCase())).replace(/\{nome\}/g,l.Nome||'')
+  .replace(/\{empresa\}/g,empCfg(l._emp).nome).replace(/\{baia\}/g,l.Baia||'').replace(/\{inicio\}/g,fmtDia(l.Inicio)).replace(/\{fim\}/g,fmtDia(l.Fim))
+  .replace(/\{procedimento\}/g,l.Procedimento||'procedimento').replace(/\{retorno\}/g,fmtDia(l.Proximo_Retorno)).replace(/\{valor\}/g,l._valor?R$(l._valor):'')}
+const wa=(l,m)=>{const n=fone(l.WhatsApp);return n?`https://wa.me/${n}?text=${encodeURIComponent(m)}`:''};
+const mail=(l,t,m)=>l.Email?`mailto:${l.Email}?subject=${encodeURIComponent(t+' — '+empCfg(l._emp).nome)}&body=${encodeURIComponent(m)}`:'';
+const IW='<svg viewBox="0 0 24 24" fill="#0E9F6E"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>';
+const IM='<svg viewBox="0 0 24 24" fill="none" stroke="#0B0D0C" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+const ICK='<svg viewBox="0 0 24 24" fill="none" stroke="#0E9F6E" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>';
+function btnWa(l,m){const u=wa(l,m);return`<a class="ic" title="WhatsApp" target="_blank" ${u?`href="${u}" data-wa="${esc(l._key)}"`:'disabled'}>${IW}</a>`}
+function btnMail(l,t,m){const u=mail(l,t,m);return`<a class="ic" title="E-mail" target="_blank" ${u?`href="${u}"`:'disabled'}>${IM}</a>`}
+const byKey=k=>DB.all.find(l=>l._key===k);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200)}
+
+/* =================== SIDEBAR =================== */
+const VIEWS=[
+  ['hoje','☀','Hoje'],['painel','◧','Visão geral'],['kanban','▥','Funil (Kanban)'],['contatos','☰','Contatos'],
+  ['agenda','▦','Agenda de baias','coworking'],['retornos','↻','Retornos do salão','salao'],['notas','✎','Notas'],['relatorios','📈','Relatórios'],['ajustes','⚙','Ajustes','admin']];
+function contHoje(){return tarefasHoje().total}
+function renderSide(){
+  const sc=DB.all.filter(l=>!hideT()||!l._teste);
+  const nov=k=>sc.filter(l=>(k==='all'||l._emp===k)&&l._st==='Novo').length;
+  let h=`<div class="brand"><div class="logo">L</div><div><b>Painel de Leads</b><small>Central de contatos</small></div></div><div class="sec">Áreas</div>`;
+  VIEWS.forEach(([k,i,t,req])=>{
+    if(req==='admin'&&PAPEL!=='admin')return;if(req&&req!=='admin'&&!temTipo(req))return;
+    let c='';if(k==='hoje'){const n=contHoje();c=`<span class="cnt ${n?'al':''}">${n}</span>`}
+    h+=`<button class="nav ${VIEW===k?'on':''}" data-v="${k}"><span class="ic2">${i}</span>${t}${c}</button>`;
+  });
+  h+=`<div class="sec">Empresas</div>`;
+  if(PAPEL==='admin')h+=`<button class="nav ${EMP==='all'?'on':''}" data-e="all"><span class="ic2">◎</span>Todas<span class="cnt ${nov('all')?'al':''}">${nov('all')}</span></button>`;
+  CFG.empresas.filter(e=>DB.empresas[e.key]).forEach(e=>h+=`<button class="nav ${EMP===e.key?'on':''}" data-e="${e.key}"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}<span class="cnt ${nov(e.key)?'al':''}">${nov(e.key)}</span></button>`);
+  h+=`<div class="side-foot">${DEMO?'<b style="color:#F5D7A8">Modo demonstração</b><br>':''}Atualizado ${new Date(DB.geradoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}<br>${CFG.temSenha?'<a id="sair">Sair</a>':''}</div>`;
+  $('#side').innerHTML=h;
+  $$('.nav[data-v]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.v;STAT='Todos';render();scrollTo(0,0)});
+  $$('.nav[data-e]').forEach(b=>b.onclick=()=>{EMP=b.dataset.e;if(['agenda','retornos'].includes(VIEW)&&!temTipo(VIEW==='agenda'?'coworking':'salao'))VIEW='painel';render()});
+  if($('#sair'))$('#sair').onclick=()=>{sst('pl_senha','');SENHA='';location.reload()};
+}
+function topo(t,s,extra){
+  return`<div class="top"><div><h1>${t}</h1><div class="sub">${s}</div></div><div class="tools">${DEMO?'<span class="demo-tag">Modo demonstração</span>':''}${extra||''}
+  <button class="btn g" id="bNovo">＋ Novo contato</button><button class="btn pri" id="bReload" title="Atualizar">↻</button></div></div>`;
+}
+function filtros(){
+  const p=st('pl_per')||'30';
+  return`<div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7A807C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="Buscar nome, telefone, nota…" value="${esc(st('pl_q')||'')}"></div>
+  <select class="sel" id="per">${[['7','7 dias'],['30','30 dias'],['90','90 dias'],['365','12 meses'],['0','Tudo']].map(([v,t])=>`<option value="${v}" ${p===v?'selected':''}>${t}</option>`).join('')}</select>
+  <label class="chk"><input type="checkbox" id="hideT" ${hideT()?'checked':''}> Ocultar testes</label>`;
+}
+function bindTopo(){
+  if($('#bNovo'))$('#bNovo').onclick=()=>modalNovo();
+  if($('#bReload'))$('#bReload').onclick=()=>carregar();
+  if($('#q'))$('#q').oninput=e=>{sst('pl_q',e.target.value);clearTimeout(window._qt);window._qt=setTimeout(()=>{render();const q=$('#q');q.focus();q.setSelectionRange(q.value.length,q.value.length)},250)};
+  if($('#per'))$('#per').onchange=e=>{sst('pl_per',e.target.value);render()};
+  if($('#hideT'))$('#hideT').onchange=e=>{sst('pl_hide',e.target.checked?'1':'0');render()};
+  $$('[data-open]').forEach(r=>r.onclick=e=>{if(e.target.closest('a,select,button:not([data-open])'))return;abrir(r.dataset.open)});
+  $$('[data-wa]').forEach(a=>a.addEventListener('click',()=>registrarContato(a.dataset.wa,'WhatsApp enviado')));
+  $$('[data-feito]').forEach(b=>b.onclick=e=>{e.stopPropagation();registrarContato(b.dataset.feito,'Marcado como feito')});
+  $$('select[data-qs]').forEach(s=>s.onchange=e=>{e.stopPropagation();mudarStatus(s.dataset.qs,s.value)});
+  $$('select[data-qs]').forEach(s=>s.onclick=e=>e.stopPropagation());
+}
+function render(){
+  renderSide();
+  const empN=EMP==='all'?'Todas as empresas':empCfg(EMP).nome;
+  const V={hoje:vHoje,painel:vPainel,kanban:vKanban,contatos:vContatos,agenda:vAgenda,retornos:vRetornos,notas:vNotas,relatorios:vRelatorios,ajustes:vAjustes}[VIEW]||vHoje;
+  $('#main').innerHTML=V(empN);
+  bindTopo();if(V.after)V.after();
+}
+
+/* =================== HOJE =================== */
+function ultimoProc(l){const ps=DB.procs.filter(p=>p.LeadID===l.ID&&p.Empresa===l._emp).sort((a,b)=>String(b.Data).localeCompare(String(a.Data)));return ps[0]||null}
+function proxRetorno(l){const p=ultimoProc(l);return(p&&p.Proximo)||l.Proximo_Retorno||''}
+function tarefasHoje(){
+  const sc=escopo(),hj=hojeISO();
+  const responder=sc.filter(l=>l._st==='Novo').sort((a,b)=>a._dt-b._dt);
+  const follow=sc.filter(l=>l.Lembrete_Em&&String(l.Lembrete_Em).slice(0,10)<=hj&&ABERTOS.includes(l._st)&&l._st!=='Novo');
+  const ret=sc.filter(l=>empCfg(l._emp).tipo==='salao').map(l=>({l,r:proxRetorno(l)})).filter(x=>x.r).map(x=>({...x,f:Math.round((dia(x.r)-dia(hj))/864e5)}))
+    .filter(x=>x.f<=CFG.diasAntes&&!(x.l.Ultimo_Contato&&String(x.l.Ultimo_Contato).slice(0,10)>=addDias(-CFG.diasAntes)&&x.l.Ultimo_Contato>=(ultimoProc(x.l)||{}).Data)).sort((a,b)=>a.f-b.f);
+  const parado=sc.filter(l=>['Em conversa','Orçamento enviado'].includes(l._st)&&!follow.includes(l)&&(Date.now()-new Date(l.Ultimo_Contato||l.Status_Desde||l.Recebido_em))/864e5>CFG.paradoDias);
+  const reservas=sc.filter(l=>empCfg(l._emp).tipo==='coworking'&&l.Inicio&&['Agendado','Fechado','Em conversa','Novo'].includes(l._st)&&String(l.Inicio).slice(0,10)>=hj&&String(l.Inicio).slice(0,10)<=addDias(1));
+  return{responder,follow,ret,parado,reservas,total:responder.length+follow.length+ret.length+parado.length};
+}
+function itemHoje(l,extra,msg,tag){
+  const m=msg||preencher(modelos(l._emp)[0]?.m||'',l);
+  return`<div class="ti"><div class="who" data-open="${esc(l._key)}"><b>${esc(l.Nome)}</b><span>${EMP==='all'?empTag(l._emp)+' · ':''}${extra}</span></div>${tag||''}<div class="acts">${btnWa(l,m)}<button class="ic" title="Marcar como feito" data-feito="${esc(l._key)}">${ICK}</button></div></div>`;
+}
+function vHoje(empN){
+  const t=tarefasHoje(),sc=escopo();
+  const hojeN=sc.filter(l=>l._dt.toDateString()===new Date().toDateString()).length;
+  const resp=sc.filter(l=>l._resp!==null&&l._dt>Date.now()-30*864e5);
+  const media=resp.length?resp.reduce((s,l)=>s+l._resp,0)/resp.length:null;
+  const sla=resp.length?Math.round(resp.filter(l=>l._resp<=CFG.slaHoras).length/resp.length*100):null;
+  const fmtH=h=>h===null?'—':h<1?Math.round(h*60)+' min':h.toFixed(1).replace('.',',')+'h';
+  const bloco=(tit,cor,arr,fn,vazio)=>`<div class="panel"><h3><span style="color:${cor}">●</span>${tit}<small>${arr.length}</small></h3>${arr.length?`<div class="todo">${arr.slice(0,12).map(fn).join('')}</div>${arr.length>12?`<div class="hint" style="margin-top:8px">+${arr.length-12} na lista de Contatos</div>`:''}`:`<div class="hint">${vazio}</div>`}</div>`;
+  const sd=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  return topo('Hoje',`${sd.charAt(0).toUpperCase()+sd.slice(1)} · ${empN}`)+`
+  <div class="kpis">
+    <div class="kpi ${t.total?'red':'grn'}"><div class="l">Tarefas pra hoje</div><div class="v">${t.total}</div><div class="d">${t.total?'vamos zerar essa lista':'tudo em dia ✓'}</div></div>
+    <div class="kpi"><div class="l">Entraram hoje</div><div class="v">${hojeN}</div><div class="d">novos contatos</div></div>
+    <div class="kpi"><div class="l">Tempo médio de resposta</div><div class="v">${fmtH(media)}</div><div class="d">últimos 30 dias</div></div>
+    <div class="kpi ${sla!==null&&sla<70?'red':'grn'}"><div class="l">Respondidos em até ${CFG.slaHoras}h</div><div class="v">${sla===null?'—':sla+'%'}</div><div class="d">meta de atendimento</div></div>
+  </div>
+  <div class="grid g2e">
+    ${bloco('Responder agora','#E5484D',t.responder,l=>itemHoje(l,`${fmtFone(l.WhatsApp)} · chegou há ${idade(l)}`,null,atrasado(l)?'<span class="badge" style="background:var(--rl);color:var(--r)">atrasado</span>':''),'Nenhum contato esperando resposta. 👏')}
+    ${bloco('Follow-ups marcados','#2563EB',t.follow,l=>itemHoje(l,`${l._st} · lembrete ${fmtDia(l.Lembrete_Em)}`,preencher((modelos(l._emp).find(m=>/follow/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)),'Nenhum lembrete pra hoje.')}
+    ${temTipo('salao')?bloco('Retornos do salão','#6D4AFF',t.ret,x=>itemHoje(x.l,`${esc(x.l.Procedimento||ultimoProc(x.l)?.Procedimento||'')} · ${x.f<0?'venceu há '+(-x.f)+'d':'vence em '+x.f+'d'}`,preencher((modelos(x.l._emp).find(m=>/retorno/i.test(m.t))||{m:''}).m,{...x.l,Procedimento:x.l.Procedimento||ultimoProc(x.l)?.Procedimento,Proximo_Retorno:x.r})),'Nenhum retorno vencendo.'):''}
+    ${bloco('Parados há mais de '+CFG.paradoDias+' dias','#D97706',t.parado,l=>itemHoje(l,`${l._st} · sem contato há ${Math.floor((Date.now()-new Date(l.Ultimo_Contato||l.Status_Desde||l.Recebido_em))/864e5)}d`,preencher((modelos(l._emp).find(m=>/follow/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)),'Nenhuma negociação esfriando.')}
+    ${temTipo('coworking')?bloco('Reservas hoje e amanhã','#0E9F6E',t.reservas,l=>itemHoje(l,`Baia ${esc(l.Baia||'?')} · ${fmtDia(l.Inicio)} a ${fmtDia(l.Fim)}`,preencher((modelos(l._emp).find(m=>/reserva/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)),'Nenhuma reserva começando.'):''}
+  </div>`;
+}
+/* =================== PAINEL =================== */
+function vPainel(empN){
+  const base=busca(periodo(escopo())),per=+(st('pl_per')||30);
+  const ant=per?escopo().filter(l=>l._dt>=Date.now()-2*per*864e5&&l._dt<Date.now()-per*864e5):[];
+  const fech=base.filter(l=>l._st==='Fechado'),valor=fech.reduce((s,l)=>s+l._valor,0);
+  const pend=base.filter(l=>l._st==='Novo'),and=base.filter(l=>['Em conversa','Orçamento enviado','Agendado'].includes(l._st));
+  const pipe=and.reduce((s,l)=>s+l._valor,0);
+  const taxa=base.length?Math.round(fech.length/base.length*100):0;
+  const dl=(a,b)=>{if(!per||!b)return'';const d=Math.round((a-b)/b*100);return`<span class="${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${Math.abs(d)}%</span> vs. anterior`};
+  const vAnt=ant.filter(l=>l._st==='Fechado').reduce((s,l)=>s+l._valor,0);
+  return topo('Visão geral',empN,filtros())+`
+  <div class="kpis">
+    <div class="kpi"><div class="l">Contatos</div><div class="v">${base.length}</div><div class="d">${dl(base.length,ant.length)||'no período'}</div></div>
+    <div class="kpi red"><div class="l">⚠ Sem resposta</div><div class="v">${pend.length}</div><div class="d">${pend.filter(atrasado).length} há mais de ${CFG.alertaHoras}h</div></div>
+    <div class="kpi"><div class="l">Em negociação</div><div class="v">${and.length}</div><div class="d">${pipe?R$(pipe)+' em aberto':'conversa, orçamento ou agendado'}</div></div>
+    <div class="kpi grn"><div class="l">Fechados</div><div class="v">${fech.length}</div><div class="d">${valor?R$(valor):'negócios concluídos'}</div></div>
+    <div class="kpi"><div class="l">Conversão</div><div class="v">${taxa}%</div><div class="d">${valor&&vAnt?dl(valor,vAnt):'contato → fechado'}</div></div>
+  </div>
+  <div class="grid g2">
+    <div class="panel"><h3>Entradas por dia<small>${per&&per<=90?per+' dias':'últimos 90 dias'}</small></h3>${chEntradas(base,per&&per<=90?per:90)}</div>
+    <div class="panel"><h3>Funil de conversão<small>${base.length} contatos</small></h3>${chFunil(base)}</div>
+  </div>
+  <div class="grid g3">
+    <div class="panel"><h3>${EMP==='all'?'Por empresa':'Por status'}</h3>${EMP==='all'?barras(CFG.empresas.filter(e=>DB.empresas[e.key]).map(e=>[curto(e.nome),base.filter(l=>l._emp===e.key).length,e.cor==='#F5F6F4'?'#0B0D0C':e.cor])):barras(STATUS.map((s,i)=>[s,base.filter(l=>l._st===s).length,STC[i]]))}</div>
+    <div class="panel"><h3>De onde vêm os contatos</h3>${barras(contar(base,l=>l._canal).map(([k,n])=>[k,n,'#0E9F6E']))}</div>
+    <div class="panel"><h3>Novos x antigos</h3>${barras([['Clientes novos',base.filter(l=>l.Tipo_Cliente!=='Antigo'&&!l._antigo).length,'#0E9F6E'],['Clientes antigos',base.filter(l=>l.Tipo_Cliente==='Antigo'||l._antigo).length,'#0B0D0C']])}</div>
+  </div>
+  ${tabelaWrap(base,'Últimos contatos',8)}`;
+}
+function contar(arr,fn){const m={};arr.forEach(l=>{const k=fn(l)||'—';m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1])}
+/* =================== CHARTS =================== */
+function barras(rows,fmt){
+  const max=Math.max(1,...rows.map(r=>r[1]));if(!rows.length||!rows.some(r=>r[1]))return'<div class="hint">Sem dados no período.</div>';
+  return rows.map(([k,n,c])=>`<div class="frow"><span>${esc(k)}</span><div class="fbar"><i style="width:${n/max*100}%;background:${c}"></i></div><b>${fmt?fmt(n):n}</b></div>`).join('');
+}
+function chEntradas(arr,dias){
+  const hoje=new Date();hoje.setHours(0,0,0,0);
+  const c=Array.from({length:dias},(_,i)=>({d:new Date(hoje-(dias-1-i)*864e5),n:0}));
+  arr.forEach(l=>{const x=new Date(l._dt);x.setHours(0,0,0,0);const i=Math.round((x-c[0].d)/864e5);if(i>=0&&i<dias)c[i].n++});
+  const max=Math.max(1,...c.map(x=>x.n)),W=700,H=180,pb=20,bw=W/dias;let g='';
+  [0,.5,1].forEach(f=>{const y=(H-pb)-f*(H-pb-12);g+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#EEF0ED"/><text x="${W}" y="${y-3}" font-size="10" fill="#9CA3A0" text-anchor="end">${Math.round(max*f)}</text>`});
+  c.forEach((x,i)=>{const h=x.n/max*(H-pb-12),xx=i*bw+bw*.18,w=Math.max(2,bw*.64);
+    g+=`<rect x="${xx}" y="${H-pb-h}" width="${w}" height="${Math.max(h,x.n?2:0)}" rx="${Math.min(3,w/2)}" fill="${i===dias-1?'#0B0D0C':'#0E9F6E'}"><title>${x.d.toLocaleDateString('pt-BR')}: ${x.n}</title></rect>`;
+    if(i%Math.ceil(dias/8)===0)g+=`<text x="${xx+w/2}" y="${H-4}" font-size="10" fill="#9CA3A0" text-anchor="middle">${x.d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</text>`});
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%" height="180" preserveAspectRatio="none">${g}</svg>`;
+}
+function chFunil(arr){
+  const passou=i=>arr.filter(l=>{const k=STATUS.indexOf(l._st);if(l._st==='Perdido')return i===0;return k>=i}).length;
+  const et=[['Contatos',arr.length],['Conversaram',passou(1)],['Orçamento',passou(2)],['Agendado',passou(3)],['Fechado',passou(4)]];
+  const tot=Math.max(1,arr.length),cores=['#0B0D0C','#2563EB','#D97706','#6D4AFF','#0E9F6E'];
+  return`<div class="fun">${et.map(([k,n],i)=>`<div class="st"><div class="bx" style="width:${Math.max(14,n/tot*100)}%;background:${cores[i]}">${n}</div><div class="pc"><b style="color:var(--ink)">${k}</b> · ${Math.round(n/tot*100)}%${i?` <span style="color:#B6BCB8">(${et[i-1][1]?Math.round(n/et[i-1][1]*100):0}% da etapa anterior)</span>`:''}</div></div>`).join('')}
+  <div class="hint" style="margin-top:6px">Perdidos: ${arr.filter(l=>l._st==='Perdido').length}</div></div>`;
+}
+function chMeses(arr,valorFn,meses,cores){
+  const hoje=new Date(),ks=[];for(let i=meses-1;i>=0;i--){const d=new Date(hoje.getFullYear(),hoje.getMonth()-i,1);ks.push(d)}
+  const emps=EMP==='all'?CFG.empresas.filter(e=>DB.empresas[e.key]):[empCfg(EMP)];
+  const dados=ks.map(d=>emps.map(e=>arr.filter(l=>l._emp===e.key&&(()=>{const x=valorFn.data(l);return x&&x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth()})()).reduce((s,l)=>s+valorFn.v(l),0)));
+  const max=Math.max(1,...dados.map(r=>r.reduce((a,b)=>a+b,0))),W=700,H=200,pb=22,bw=W/meses;let g='';
+  [0,.5,1].forEach(f=>{const y=(H-pb)-f*(H-pb-14);g+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#EEF0ED"/><text x="2" y="${y-3}" font-size="10" fill="#9CA3A0">${valorFn.fmt(max*f)}</text>`});
+  dados.forEach((r,i)=>{let y=H-pb;const x=i*bw+bw*.22,w=bw*.56;
+    r.forEach((v,j)=>{const h=v/max*(H-pb-14);if(h>0){y-=h;g+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${emps[j].cor==='#F5F6F4'?'#0B0D0C':emps[j].cor}"><title>${curto(emps[j].nome)} · ${ks[i].toLocaleDateString('pt-BR',{month:'short',year:'2-digit'})}: ${valorFn.fmt(v)}</title></rect>`}});
+    const tot=r.reduce((a,b)=>a+b,0);if(tot)g+=`<text x="${x+w/2}" y="${y-4}" font-size="10" fill="#3D423F" text-anchor="middle" font-weight="700">${valorFn.fmt(tot)}</text>`;
+    g+=`<text x="${x+w/2}" y="${H-5}" font-size="10" fill="#9CA3A0" text-anchor="middle">${ks[i].toLocaleDateString('pt-BR',{month:'short'}).replace('.','')}</text>`});
+  const leg=emps.length>1?`<div class="chips" style="margin-top:6px">${emps.map(e=>`<span class="emp"><i class="dot" style="background:${e.cor==='#F5F6F4'?'#0B0D0C':e.cor}"></i>${esc(curto(e.nome))}</span>`).join('')}</div>`:'';
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%" height="200" preserveAspectRatio="none">${g}</svg>${leg}`;
+}
+function chLinhaResp(arr){
+  const sem=12,hoje=new Date();hoje.setHours(0,0,0,0);const ini=new Date(hoje-(sem*7-1)*864e5);
+  const pts=Array.from({length:sem},(_,i)=>{const a=new Date(ini.getTime()+i*7*864e5),b=new Date(a.getTime()+7*864e5);const xs=arr.filter(l=>l._resp!==null&&l._dt>=a&&l._dt<b);return{a,v:xs.length?xs.reduce((s,l)=>s+l._resp,0)/xs.length:null}});
+  const vs=pts.filter(p=>p.v!==null);if(!vs.length)return'<div class="hint">Ainda sem respostas registradas. O tempo é medido quando você clica no WhatsApp ou em “feito”.</div>';
+  const max=Math.max(CFG.slaHoras*1.5,...vs.map(p=>p.v)),W=700,H=180,pb=20;const X=i=>20+i*(W-40)/(sem-1),Y=v=>(H-pb)-v/max*(H-pb-14);
+  let g=`<line x1="0" x2="${W}" y1="${Y(CFG.slaHoras)}" y2="${Y(CFG.slaHoras)}" stroke="#0E9F6E" stroke-dasharray="4 4"/><text x="${W-4}" y="${Y(CFG.slaHoras)-4}" font-size="10" fill="#0E9F6E" text-anchor="end">meta ${CFG.slaHoras}h</text>`;
+  let d='';pts.forEach((p,i)=>{if(p.v===null)return;d+=(d?'L':'M')+X(i)+' '+Y(p.v)});
+  g+=`<path d="${d}" fill="none" stroke="#0B0D0C" stroke-width="2.5"/>`;
+  pts.forEach((p,i)=>{if(p.v!==null)g+=`<circle cx="${X(i)}" cy="${Y(p.v)}" r="4" fill="${p.v<=CFG.slaHoras?'#0E9F6E':'#E5484D'}"><title>Semana de ${p.a.toLocaleDateString('pt-BR')}: ${p.v.toFixed(1)}h</title></circle>`;
+    if(i%2===0)g+=`<text x="${X(i)}" y="${H-4}" font-size="10" fill="#9CA3A0" text-anchor="middle">${p.a.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</text>`});
+  return`<svg viewBox="0 0 ${W} ${H}" width="100%" height="180" preserveAspectRatio="none">${g}</svg>`;
+}
+function chHeat(arr){
+  const m=Array.from({length:7},()=>Array(24).fill(0));arr.forEach(l=>m[l._dt.getDay()][l._dt.getHours()]++);
+  const max=Math.max(1,...m.flat()),dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let h='<div class="heat"><span></span>'+Array.from({length:24},(_,i)=>`<span style="text-align:center">${i%3===0?i:''}</span>`).join('');
+  [1,2,3,4,5,6,0].forEach(d=>{h+=`<span>${dn[d]}</span>`+m[d].map((n,hr)=>`<i title="${dn[d]} ${hr}h: ${n}" style="background:${n?`rgba(14,159,110,${.15+.85*n/max})`:'#EFF1EE'}"></i>`).join('')});
+  return h+'</div>';
+}
+/* =================== KANBAN =================== */
+function vKanban(empN){
+  const base=busca(escopo().filter(l=>ABERTOS.includes(l._st)||(Date.now()-new Date(l.Status_Desde||l.Recebido_em))/864e5<30));
+  return topo('Funil de vendas',empN+' · arraste os cartões entre as colunas',`<div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7A807C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="Buscar…" value="${esc(st('pl_q')||'')}"></div>`)+
+  `<div class="kb">${STATUS.map((s,i)=>{const cs=base.filter(l=>l._st===s);const v=cs.reduce((a,l)=>a+l._valor,0);
+    return`<div class="col" data-col="${s}"><h4><i class="dot" style="background:${STC[i]}"></i>${s}<span>${cs.length}</span></h4>${v?`<div class="sum">${R$(v)}</div>`:''}
+    ${cs.map(l=>`<div class="kc ${atrasado(l)?'late':''}" draggable="true" data-k="${esc(l._key)}" data-open="${esc(l._key)}"><b>${esc(l.Nome)}</b>
+      <div class="m">${EMP==='all'?empTag(l._emp):''}${l._valor?`<span class="tag">${R$(l._valor)}</span>`:''}${l.Tipo_Cliente==='Antigo'||l._antigo?'<span class="tag ant">Antigo</span>':''}<span>${idade(l)}</span>${l.Lembrete_Em&&ABERTOS.includes(l._st)?`<span>📌 ${fmtDia(l.Lembrete_Em)}</span>`:''}</div></div>`).join('')}
+    </div>`}).join('')}</div><div class="hint" style="margin-top:8px">Fechados e perdidos aparecem por 30 dias.</div>`;
+}
+vKanban.after=()=>{
+  $$('.kc').forEach(c=>c.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',c.dataset.k);c.style.opacity=.4}));
+  $$('.kc').forEach(c=>c.addEventListener('dragend',()=>c.style.opacity=1));
+  $$('.col').forEach(col=>{col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('over')});col.addEventListener('dragleave',()=>col.classList.remove('over'));
+    col.addEventListener('drop',e=>{e.preventDefault();col.classList.remove('over');mudarStatus(e.dataTransfer.getData('text/plain'),col.dataset.col)})});
+};
+/* =================== CONTATOS =================== */
+function tabelaWrap(arr,titulo,limite){
+  const lista=STAT==='Todos'?arr:arr.filter(l=>l._st===STAT);
+  return`<div class="tw"><div class="th"><h3>${titulo}</h3>${limite?`<button class="btn sm" style="margin-left:auto" onclick="VIEW='contatos';render()">Ver todos →</button>`:`<div class="chips" style="margin-left:auto">${['Todos',...STATUS].map(s=>`<button class="chip ${STAT===s?'on':''}" onclick="STAT='${s}';render()">${s}${s!=='Todos'?' · '+arr.filter(l=>l._st===s).length:''}</button>`).join('')}</div>`}</div>${tabela(limite?lista.slice(0,limite):lista)}</div>`;
+}
+function detalhe(l){
+  const t=empCfg(l._emp).tipo;
+  if(t==='coworking')return l.Baia?`Baia ${esc(l.Baia)} · ${esc(l.Periodo||'')}`:esc(l.Periodo||'—');
+  if(t==='salao')return esc(l.Procedimento||ultimoProc(l)?.Procedimento||'—');
+  return esc(String(l.Mensagem||l.Observacoes||'').slice(0,40))||'—';
+}
+function tabela(arr){
+  if(!arr.length)return'<div class="empty">Nenhum contato com esses filtros.</div>';
+  return`<table class="resp"><thead><tr><th>Contato</th>${EMP==='all'?'<th>Empresa</th>':''}<th>Detalhe</th><th>Status</th><th>Valor</th><th>Canal</th><th>Chegou</th><th style="text-align:right">Ações</th></tr></thead><tbody>
+  ${arr.map(l=>{const m=preencher(modelos(l._emp)[0]?.m||'',l);return`<tr class="row ${atrasado(l)?'late':''}" data-open="${esc(l._key)}">
+    <td class="who"><b>${esc(l.Nome)} ${l.Tipo_Cliente==='Antigo'||l._antigo?'<span class="tag ant">Antigo</span>':''}${l._outras.length?` <span class="tag dup" title="Mesmo telefone em outro cadastro">${l._outras.length+1}x</span>`:''}</b><span>${fmtFone(l.WhatsApp)}${l.Email?' · '+esc(l.Email):''}</span></td>
+    ${EMP==='all'?`<td data-l="Empresa">${empTag(l._emp)}</td>`:''}
+    <td data-l="Detalhe">${detalhe(l)}</td>
+    <td data-l="Status"><select class="qs" data-qs="${esc(l._key)}">${STATUS.map(s=>`<option ${s===l._st?'selected':''}>${s}</option>`).join('')}</select></td>
+    <td data-l="Valor">${l._valor?R$(l._valor):'<span class="hint">—</span>'}</td>
+    <td data-l="Canal"><span class="tag">${esc(l._canal)}</span></td>
+    <td data-l="Chegou"><div>${fmtData(l._dt)}</div><div class="age ${atrasado(l)?'red':''}">há ${idade(l)}</div></td>
+    <td class="ac"><div class="acts">${btnWa(l,m)}${btnMail(l,modelos(l._emp)[0]?.t||'Contato',m)}</div></td></tr>`}).join('')}</tbody></table>`;
+}
+function vContatos(empN){
+  const base=busca(periodo(escopo()));
+  return topo('Contatos',empN+' · '+base.length+' no período',filtros()+'<button class="btn" id="bCsv">⬇ Excel</button>')+tabelaWrap(base,'Todos os contatos');
+}
+vContatos.after=()=>{$('#bCsv').onclick=exportCsv};
+function exportCsv(){
+  const base=busca(periodo(escopo())).filter(l=>STAT==='Todos'||l._st===STAT);
+  const cols=['Empresa','Nome','WhatsApp','Email','Status','Canal','Tipo_Cliente','Valor','Motivo_Perda','Recebido_em','Ultimo_Contato','Observacoes','Baia','Inicio','Fim','Procedimento','Proximo_Retorno'];
+  const val=(l,c)=>c==='Empresa'?empCfg(l._emp).nome:c==='Status'?l._st:c==='Canal'?l._canal:c==='Recebido_em'?l._dt.toLocaleString('pt-BR'):(l[c]??'');
+  const csv='﻿'+[cols.join(';')].concat(base.map(l=>cols.map(c=>'"'+String(val(l,c)).replace(/"/g,'""')+'"').join(';'))).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='contatos-'+hojeISO()+'.csv';a.click();
+}
+/* =================== AGENDA =================== */
+function vAgenda(empN){
+  const ano=CAL_MES.getFullYear(),mes=CAL_MES.getMonth(),nd=new Date(ano,mes+1,0).getDate(),hj=hojeISO();
+  const res=escopo().filter(l=>empCfg(l._emp).tipo==='coworking'&&l.Baia&&l.Inicio&&l._st!=='Perdido');
+  const baias=[...new Set([...(CFG.baias||[]),...res.map(l=>String(l.Baia))])].sort();
+  const iso=d=>`${ano}-${String(mes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  let ocup=0,conf=0;
+  const linhas=baias.map(b=>{let tds='';for(let d=1;d<=nd;d++){const x=iso(d);const rs=res.filter(l=>String(l.Baia)===b&&String(l.Inicio).slice(0,10)<=x&&String(l.Fim||l.Inicio).slice(0,10)>=x);
+    if(rs.length)ocup++;if(rs.length>1)conf++;const r=rs[0];const cl=rs.length>1?'cf':r?(['Fechado','Agendado'].includes(r._st)?'oc':'pe'):'';
+    tds+=`<td class="c ${cl} ${x===hj?'td':''}" ${r?`data-open="${esc(r._key)}" title="${esc(rs.map(z=>z.Nome+' ('+z._st+')').join(', '))}"`:''}></td>`}
+    return`<tr><td class="bn">${esc(b)}</td>${tds}</tr>`}).join('');
+  const head=Array.from({length:nd},(_,i)=>{const w=new Date(ano,mes,i+1).getDay();return`<th class="${w===0||w===6?'we':''}">${i+1}</th>`}).join('');
+  const taxa=baias.length?Math.round(ocup/(baias.length*nd)*100):0;
+  return topo('Agenda de baias',empN)+`
+  <div class="kpis"><div class="kpi grn"><div class="l">Ocupação no mês</div><div class="v">${taxa}%</div><div class="d">${ocup} diárias de ${baias.length*nd}</div></div>
+  <div class="kpi"><div class="l">Reservas no mês</div><div class="v">${res.filter(l=>String(l.Inicio).slice(0,7)===iso(1).slice(0,7)).length}</div><div class="d">solicitadas ou confirmadas</div></div>
+  <div class="kpi ${conf?'red':''}"><div class="l">Conflitos</div><div class="v">${conf}</div><div class="d">mesma baia, mesmo dia</div></div></div>
+  <div class="panel"><h3><button class="btn sm" id="mAnt">‹</button><span style="min-width:150px;text-align:center;text-transform:capitalize">${CAL_MES.toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</span><button class="btn sm" id="mProx">›</button>
+  <small><span class="emp"><i class="dot" style="background:#0E9F6E"></i>Confirmada</span> &nbsp;<span class="emp"><i class="dot" style="background:#9ED9C1"></i>Pedido</span> &nbsp;<span class="emp"><i class="dot" style="background:#E5484D"></i>Conflito</span></small></h3>
+  ${baias.length?`<div class="cal"><table><thead><tr><th></th>${head}</tr></thead><tbody>${linhas}</tbody></table></div>`:'<div class="hint">Cadastre as baias em Ajustes.</div>'}</div>`;
+}
+vAgenda.after=()=>{$('#mAnt').onclick=()=>{CAL_MES.setMonth(CAL_MES.getMonth()-1);render()};$('#mProx').onclick=()=>{CAL_MES.setMonth(CAL_MES.getMonth()+1);render()}};
+/* =================== RETORNOS =================== */
+function vRetornos(empN){
+  const hj=hojeISO();
+  const lst=escopo().filter(l=>empCfg(l._emp).tipo==='salao').map(l=>({l,p:ultimoProc(l),r:proxRetorno(l)})).filter(x=>x.r).map(x=>({...x,f:Math.round((dia(x.r)-dia(hj))/864e5)})).sort((a,b)=>a.f-b.f);
+  const venc=lst.filter(x=>x.f<0).length,q=lst.filter(x=>x.f>=0&&x.f<=CFG.diasAntes).length;
+  const procs=DB.procs.filter(p=>EMP==='all'||p.Empresa===EMP);
+  return topo('Retornos do salão',empN)+`
+  <div class="kpis"><div class="kpi red"><div class="l">Vencidos</div><div class="v">${venc}</div><div class="d">já passou da data</div></div>
+  <div class="kpi"><div class="l">Chamar agora</div><div class="v" style="color:var(--a)">${q}</div><div class="d">vencem em até ${CFG.diasAntes} dias</div></div>
+  <div class="kpi grn"><div class="l">Em dia</div><div class="v">${lst.length-venc-q}</div><div class="d">clientes acompanhados</div></div>
+  <div class="kpi"><div class="l">Atendimentos registrados</div><div class="v">${procs.length}</div><div class="d">histórico total</div></div></div>
+  <div class="grid g2"><div class="tw"><div class="th"><h3>Próximos retornos</h3></div>${!lst.length?'<div class="empty">Nenhum procedimento registrado. Abra uma cliente e registre o atendimento na aba “Salão”.</div>':`
+  <table class="resp"><thead><tr><th>Cliente</th><th>Procedimento</th><th>Feito em</th><th>Retorno</th><th style="text-align:right">Ações</th></tr></thead><tbody>
+  ${lst.map(({l,p,r,f})=>{const proc=(p&&p.Procedimento)||l.Procedimento;const m=preencher((modelos(l._emp).find(x=>/retorno/i.test(x.t))||{m:''}).m,{...l,Procedimento:proc,Proximo_Retorno:r});
+    const tg=f<0?`<span class="pill s0">Vencido há ${-f}d</span>`:f<=CFG.diasAntes?`<span class="pill s2">Em ${f} dias</span>`:`<span class="pill s4">Em ${f} dias</span>`;
+    return`<tr class="row" data-open="${esc(l._key)}"><td class="who"><b>${esc(l.Nome)}</b><span>${fmtFone(l.WhatsApp)}</span></td><td data-l="Procedimento">${esc(proc)}</td><td data-l="Feito em">${fmtDia((p&&p.Data)||l.Data_Procedimento)}</td><td data-l="Retorno">${fmtDia(r)} ${tg}</td><td class="ac"><div class="acts">${btnWa(l,m)}</div></td></tr>`}).join('')}</tbody></table>`}</div>
+  <div class="panel"><h3>Procedimentos mais feitos</h3>${barras(contar(procs,p=>p.Procedimento).slice(0,8).map(([k,n])=>[k,n,'#6D4AFF']))}</div></div>`;
+}
+/* =================== NOTAS =================== */
+function vNotas(empN){
+  const q=(st('pl_q')||'').toLowerCase();
+  const ns=DB.notas.filter(n=>(EMP==='all'||n.Empresa===EMP||!n.Empresa)&&(!q||(n.Titulo+' '+n.Texto).toLowerCase().includes(q))).sort((a,b)=>(b.Fixada?1:0)-(a.Fixada?1:0)||String(b.Data).localeCompare(String(a.Data)));
+  return topo('Notas',empN+' · ideias, reuniões, anotações de clientes',`<div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7A807C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" placeholder="Buscar nas notas…" value="${esc(st('pl_q')||'')}"></div><button class="btn" id="bNota">✎ Nova nota</button>`)+
+  (CFG.notionAtivo?'':`<div class="callout a" style="margin-bottom:14px">Dica: conecte o Notion em <b>Ajustes</b> para mandar notas e fichas de clientes direto pra sua base no Notion.</div>`)+
+  (ns.length?`<div class="notes">${ns.map(n=>{const l=n.LeadID?DB.all.find(x=>x.ID===n.LeadID&&x._emp===n.Empresa):null;return`<div class="note ${n.Fixada?'pin':''}" data-nota="${esc(n.ID)}"><b>${n.Fixada?'📌 ':''}${esc(n.Titulo||'Sem título')}</b><p>${esc(n.Texto)}</p>
+  <div class="m">${n.Empresa?empTag(n.Empresa):'<span class="tag">Geral</span>'}${l?`<span class="tag">👤 ${esc(l.Nome)}</span>`:''}<span style="margin-left:auto">${fmtDia(n.Data)}</span></div></div>`}).join('')}</div>`:'<div class="empty">Nenhuma nota ainda.</div>');
+}
+vNotas.after=()=>{$('#bNota').onclick=()=>modalNota({});$$('[data-nota]').forEach(e=>e.onclick=()=>modalNota(DB.notas.find(n=>n.ID===e.dataset.nota)))};
+/* =================== RELATÓRIOS =================== */
+function vRelatorios(empN){
+  const all=escopo(),base=busca(periodo(all));
+  const fech=all.filter(l=>l._st==='Fechado');
+  const perd=base.filter(l=>l._st==='Perdido');
+  const tk=fech.length?fech.reduce((s,l)=>s+l._valor,0)/fech.filter(l=>l._valor).length||0:0;
+  const ciclo=fech.filter(l=>l.Status_Desde).map(l=>(new Date(l.Status_Desde)-l._dt)/864e5);
+  const conv=contar(base,l=>l._canal).map(([k,n])=>{const f=base.filter(l=>l._canal===k&&l._st==='Fechado').length;return[k+' · '+Math.round(f/n*100)+'%',f,'#0E9F6E']});
+  return topo('Relatórios',empN,filtros()+'<button class="btn" onclick="print()">⎙ PDF</button>')+`
+  <div class="kpis">
+    <div class="kpi grn"><div class="l">Faturado (período)</div><div class="v">${R$k(base.filter(l=>l._st==='Fechado').reduce((s,l)=>s+l._valor,0))}</div><div class="d">negócios fechados</div></div>
+    <div class="kpi"><div class="l">Ticket médio</div><div class="v">${tk?R$k(tk):'—'}</div><div class="d">por negócio fechado</div></div>
+    <div class="kpi"><div class="l">Tempo até fechar</div><div class="v">${ciclo.length?Math.round(ciclo.reduce((a,b)=>a+b,0)/ciclo.length)+'d':'—'}</div><div class="d">média do 1º contato ao fechamento</div></div>
+    <div class="kpi"><div class="l">Em aberto</div><div class="v">${R$k(all.filter(l=>['Em conversa','Orçamento enviado','Agendado'].includes(l._st)).reduce((s,l)=>s+l._valor,0))}</div><div class="d">valor em negociação</div></div>
+  </div>
+  <div class="grid g2e">
+    <div class="panel"><h3>Faturamento por mês<small>últimos 12 meses</small></h3>${chMeses(fech,{data:l=>l.Status_Desde?new Date(l.Status_Desde):l._dt,v:l=>l._valor,fmt:R$k},12)}</div>
+    <div class="panel"><h3>Contatos por mês<small>últimos 12 meses</small></h3>${chMeses(all,{data:l=>l._dt,v:()=>1,fmt:v=>Math.round(v)},12)}</div>
+    <div class="panel"><h3>Tempo de resposta por semana<small>média em horas</small></h3>${chLinhaResp(all)}</div>
+    <div class="panel"><h3>Quando os contatos chegam<small>dia × hora</small></h3>${chHeat(base)}<div class="hint" style="margin-top:8px">Quanto mais verde, mais contatos naquele horário. Bom pra decidir quando postar e quando ficar de plantão.</div></div>
+    <div class="panel"><h3>Canais que mais fecham<small>fechados · % de conversão</small></h3>${barras(conv)}</div>
+    <div class="panel"><h3>Por que perdemos<small>${perd.length} perdidos</small></h3>${barras(contar(perd,l=>l.Motivo_Perda||'Sem motivo').map(([k,n])=>[k,n,'#E5484D']))}</div>
+  </div>
+  <div class="grid g2e">${temTipo('salao')?`<div class="panel"><h3>Procedimentos (salão)</h3>${barras(contar(DB.procs.filter(p=>EMP==='all'||p.Empresa===EMP),p=>p.Procedimento).slice(0,8).map(([k,n])=>[k,n,'#6D4AFF']))}</div>`:''}
+  ${temTipo('coworking')?`<div class="panel"><h3>Pedidos por tipo (coworking)</h3>${barras(contar(base.filter(l=>empCfg(l._emp).tipo==='coworking'),l=>l.Periodo||'—').map(([k,n])=>[k,n,'#0B0D0C']))}</div>`:''}</div>`;
+}
+/* =================== DRAWER =================== */
+function abrir(key,tab){
+  const l=byKey(key);if(!l)return;CUR=l;DTAB=tab||DTAB||'dados';
+  const e=empCfg(l._emp);
+  const tabs=[['dados','Dados'],['mensagens','Mensagens'],['historico','Histórico'],['notas','Notas']];
+  if(e.tipo==='salao')tabs.splice(1,0,['salao','Salão']);
+  if(!tabs.some(t=>t[0]===DTAB))DTAB='dados';
+  $('#drawer').innerHTML=`<div class="dh"><button class="x" id="dx">×</button>${empTag(l._emp)}<h2>${esc(l.Nome)}</h2><p>Chegou em ${fmtData(l._dt)} · há ${idade(l)} · ${esc(l._canal)}</p>
+  <div class="tabs">${tabs.map(([k,t])=>`<button class="tab ${DTAB===k?'on':''}" data-t="${k}">${t}</button>`).join('')}</div></div>
+  <div class="db" id="dbody">${({dados:tDados,salao:tSalao,mensagens:tMsg,historico:tHist,notas:tNotas})[DTAB](l)}</div>
+  ${DTAB==='dados'?`<div class="df"><button class="btn" id="dc">Fechar</button><button class="btn g" id="ds">Salvar alterações</button></div>`:''}`;
+  $('#ov').classList.add('on');$('#drawer').classList.add('on');
+  $('#dx').onclick=fechar;if($('#dc'))$('#dc').onclick=fechar;if($('#ds'))$('#ds').onclick=salvarDados;
+  $$('.tab').forEach(t=>t.onclick=()=>abrir(key,t.dataset.t));
+  $$('#drawer [data-wa]').forEach(a=>a.addEventListener('click',()=>registrarContato(a.dataset.wa,'WhatsApp: '+(a.dataset.t||'mensagem'))));
+  $$('#drawer [data-lem]').forEach(b=>b.onclick=()=>{$('#fLe').value=addDias(+b.dataset.lem)});
+  if($('#fSt'))$('#fSt').onchange=()=>{$('#boxPerda').style.display=$('#fSt').value==='Perdido'?'':'none'};
+  if($('#bProc'))$('#bProc').onclick=salvarProc;
+  if($('#fPr'))$('#fPr').onchange=()=>{const d=CFG.procedimentos[$('#fPr').value];if(d)$('#fDi').value=d};
+  if($('#bNotaL'))$('#bNotaL').onclick=()=>modalNota({Empresa:l._emp,LeadID:l.ID});
+  $$('#drawer [data-nota]').forEach(x=>x.onclick=()=>modalNota(DB.notas.find(n=>n.ID===x.dataset.nota)));
+  if($('#bNotion'))$('#bNotion').onclick=()=>notionLead(l);
+  $$('#drawer [data-open]').forEach(x=>x.onclick=()=>abrir(x.dataset.open,'dados'));
+}
+function fechar(){$('#ov').classList.remove('on');$('#drawer').classList.remove('on')}
+$('#ov').onclick=fechar;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('#modal').classList.contains('on'))fecharModal();else fechar()}});
+function tDados(l){
+  const e=empCfg(l._emp);
+  return`${l._outras.length?`<div class="callout a">Este telefone já apareceu ${l._outras.length}x: ${l._outras.map(o=>`<a style="cursor:pointer;text-decoration:underline" data-open="${esc(o._key)}">${esc(curto(empCfg(o._emp).nome))} em ${o._dt.toLocaleDateString('pt-BR')}</a>`).join(', ')}</div>`:''}
+  ${atrasado(l)?`<div class="callout r">Sem resposta há ${idade(l)}. Mande o primeiro contato na aba <b>Mensagens</b>.</div>`:''}
+  <div class="info"><div><span>WhatsApp</span>${fmtFone(l.WhatsApp)}</div><div><span>E-mail</span>${esc(l.Email)||'—'}</div>
+    ${e.tipo==='coworking'?`<div><span>Pedido</span>${esc(l.Periodo)||'—'}</div><div><span>Baia</span>${esc(l.Baia)||'—'}</div><div><span>Início</span>${fmtDia(l.Inicio)||'—'}</div><div><span>Fim</span>${fmtDia(l.Fim)||'—'}</div>`:''}
+    ${l.Mensagem?`<div class="full"><span>Mensagem</span>${esc(l.Mensagem)}</div>`:''}
+    <div><span>Primeira resposta</span>${l._resp!==null?(l._resp<1?Math.round(l._resp*60)+' min':l._resp.toFixed(1)+'h'):'—'}</div><div><span>Último contato</span>${fmtDia(l.Ultimo_Contato)||'—'}</div></div>
+  <div class="r2"><div class="fld"><label>Status</label><select id="fSt">${STATUS.map(s=>`<option ${s===l._st?'selected':''}>${s}</option>`).join('')}</select></div>
+  <div class="fld"><label>Cliente</label><select id="fTp"><option value="">—</option>${['Novo','Antigo'].map(t=>`<option ${(l.Tipo_Cliente||(l._antigo?'Antigo':''))===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
+  <div id="boxPerda" style="${l._st==='Perdido'?'':'display:none'}" class="fld"><label>Motivo da perda</label><select id="fMp"><option value="">—</option>${CFG.motivosPerda.map(m=>`<option ${l.Motivo_Perda===m?'selected':''}>${m}</option>`).join('')}</select></div>
+  <div class="r2"><div class="fld"><label>Valor (R$)</label><input id="fVa" inputmode="decimal" value="${esc(l.Valor||'')}" placeholder="orçamento ou fechado"></div>
+  <div class="fld"><label>Canal</label><select id="fCa">${CFG.canais.map(c=>`<option ${l._canal===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
+  <div class="fld"><label>Lembrete de follow-up</label><input type="date" id="fLe" value="${String(l.Lembrete_Em||'').slice(0,10)}"><div class="quick">${[[1,'Amanhã'],[3,'3 dias'],[7,'1 semana'],[30,'1 mês']].map(([d,t])=>`<button class="btn sm" data-lem="${d}">${t}</button>`).join('')}<button class="btn sm" onclick="$('#fLe').value=''">Limpar</button></div></div>
+  <div class="fld"><label>Observações</label><textarea id="fOb" rows="3" placeholder="O que foi conversado, preferências, detalhes do projeto…">${esc(l.Observacoes)}</textarea></div>`;
+}
+function tSalao(l){
+  const ps=DB.procs.filter(p=>p.LeadID===l.ID&&p.Empresa===l._emp).sort((a,b)=>String(b.Data).localeCompare(String(a.Data)));
+  const r=proxRetorno(l);
+  return`${r?`<div class="callout g">↻ Próximo retorno: <b>${fmtDia(r)}</b>. O aviso chega ${CFG.diasAntes} dias antes.</div>`:''}
+  <div class="panel" style="padding:14px"><h3>Registrar atendimento</h3>
+  <div class="r3"><div class="fld"><label>Procedimento</label><select id="fPr"><option value="">—</option>${Object.keys(CFG.procedimentos).map(p=>`<option>${esc(p)}</option>`).join('')}</select></div>
+  <div class="fld"><label>Data</label><input type="date" id="fDt" value="${hojeISO()}"></div><div class="fld"><label>Refazer (dias)</label><input type="number" id="fDi" placeholder="auto"></div></div>
+  <button class="btn g" id="bProc" style="margin-top:10px;width:100%;justify-content:center">Salvar atendimento</button></div>
+  <div class="fld"><label>Histórico de atendimentos</label>${ps.length?`<div class="tl">${ps.map(p=>`<div><b>${esc(p.Procedimento)}</b><small>${fmtDia(p.Data)}${p.Proximo?' · retorno '+fmtDia(p.Proximo):''}</small></div>`).join('')}</div>`:'<div class="hint">Nenhum atendimento registrado.</div>'}</div>`;
+}
+function tMsg(l){
+  return`<div class="hint">Clique no WhatsApp ou e-mail: a mensagem abre pronta e o contato fica registrado no histórico.</div>`+modelos(l._emp).map(t=>{const m=preencher(t.m,l);
+    return`<div class="tpl"><div style="min-width:0;flex:1"><b>${esc(t.t)}</b><small>${esc(m)}</small></div><div class="acts">${(()=>{const u=wa(l,m);return`<a class="ic" target="_blank" ${u?`href="${u}" data-wa="${esc(l._key)}" data-t="${esc(t.t)}"`:'disabled'}>${IW}</a>`})()}${btnMail(l,t.t,m)}</div></div>`}).join('')+
+    (PAPEL==='admin'?'<div class="hint">Edite os textos em Ajustes → Mensagens.</div>':'');
+}
+function tHist(l){
+  const h=DB.hist.filter(x=>x.LeadID===l.ID&&x.Empresa===l._emp).sort((a,b)=>String(b.Data).localeCompare(String(a.Data)));
+  const ic={status:'⇄',contato:'💬',nota:'✎',procedimento:'💇',valor:'R$',lembrete:'📌',criado:'＋'};
+  return`<div class="tl">${h.map(x=>`<div><b>${ic[x.Tipo]||'•'} ${esc(x.Descricao)}</b><small>${new Date(x.Data).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div>`).join('')}
+  <div><b>Contato chegou${l._canal==='Site'?' pelo site':' ('+esc(l._canal)+')'}</b><small>${l._dt.toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</small></div></div>`;
+}
+function tNotas(l){
+  const ns=DB.notas.filter(n=>n.LeadID===l.ID&&n.Empresa===l._emp);
+  return`<div class="acts" style="justify-content:flex-start"><button class="btn g" id="bNotaL">✎ Nova nota</button>${CFG.notionAtivo?'<button class="btn" id="bNotion">Enviar ficha ao Notion</button>':''}</div>
+  ${ns.length?ns.map(n=>`<div class="note" data-nota="${esc(n.ID)}" style="min-height:0"><b>${esc(n.Titulo||'Nota')}</b><p>${esc(n.Texto)}</p><div class="m"><span>${fmtDia(n.Data)}</span></div></div>`).join(''):'<div class="hint">Nenhuma nota sobre este contato.</div>'}`;
+}
+/* =================== AÇÕES =================== */
+function aplicar(l,c){Object.assign(l,c);l._st=normSt(l.Status);l._valor=Number(String(l.Valor||'').replace(',','.'))||0;if(c.Canal)l._canal=c.Canal}
+function salvar(l,c,msg,histDesc){
+  const orig={...l};
+  if(c.Status!==undefined&&c.Status!==l._st){c.Status_Desde=new Date().toISOString();DB.hist.push({Data:new Date().toISOString(),Empresa:l._emp,LeadID:l.ID,Tipo:'status',Descricao:l._st+' → '+c.Status})}
+  if(c.Ultimo_Contato!==undefined){if(!l.Primeira_Resposta){c.Primeira_Resposta=new Date().toISOString();l._resp=(new Date()-l._dt)/36e5}DB.hist.push({Data:new Date().toISOString(),Empresa:l._emp,LeadID:l.ID,Tipo:'contato',Descricao:histDesc||'Contato registrado'})}
+  aplicar(l,c);render();if($('#drawer').classList.contains('on'))abrir(l._key);toast(msg);
+  const envio={...c};if(histDesc)envio._via=histDesc;delete envio.Primeira_Resposta;delete envio.Status_Desde;
+  api('atualizarLead',l._emp,l.ID,envio).catch(e=>{Object.assign(l,orig);render();toast('Erro ao salvar: '+(e.message||e))});
+}
+function registrarContato(key,via){const l=byKey(key);if(!l)return;const c={Ultimo_Contato:hojeISO()};if(l._st==='Novo')c.Status='Em conversa';setTimeout(()=>salvar(l,c,l._st==='Novo'?'Marcado como “Em conversa”':'Contato registrado ✓',via),300)}
+function mudarStatus(key,s){
+  const l=byKey(key);if(!l||l._st===s)return;
+  if(s==='Perdido')return modalPerda(l);
+  if(s==='Fechado'&&!l._valor)return modalValor(l);
+  salvar(l,{Status:s},'Movido para '+s);
+}
+function salvarDados(){
+  const l=CUR,c={Status:$('#fSt').value,Tipo_Cliente:$('#fTp').value,Valor:$('#fVa').value.replace(/[^\d,.]/g,''),Canal:$('#fCa').value,Lembrete_Em:$('#fLe').value,Observacoes:$('#fOb').value};
+  if(c.Status==='Perdido')c.Motivo_Perda=$('#fMp').value;
+  Object.keys(c).forEach(k=>{if(String(c[k]??'')===String(k==='Status'?l._st:k==='Canal'?l._canal:(l[k]??'')))delete c[k]});
+  if(!Object.keys(c).length){fechar();return}
+  salvar(l,c,'Salvo ✓');fechar();
+}
+function salvarProc(){
+  const l=CUR,p=$('#fPr').value,d=$('#fDt').value,di=+$('#fDi').value||CFG.procedimentos[p]||0;
+  if(!p||!d)return toast('Escolha o procedimento e a data');
+  const prox=di?new Date(new Date(d+'T12:00:00').getTime()+di*864e5).toISOString().slice(0,10):'';
+  DB.procs.push({ID:'tmp'+Date.now(),Empresa:l._emp,LeadID:l.ID,Nome:l.Nome,WhatsApp:l.WhatsApp,Procedimento:p,Data:d,Dias:di,Proximo:prox});
+  aplicar(l,{Procedimento:p,Data_Procedimento:d,Retorno_Dias:di,Proximo_Retorno:prox});
+  DB.hist.push({Data:new Date().toISOString(),Empresa:l._emp,LeadID:l.ID,Tipo:'procedimento',Descricao:p+' em '+fmtDia(d)});
+  abrir(l._key,'salao');render();abrir(l._key,'salao');toast('Atendimento salvo · retorno '+fmtDia(prox));
+  api('addProcedimento',l._emp,l.ID,l.Nome,l.WhatsApp,p,d,di).catch(e=>toast('Erro: '+(e.message||e)));
+}
+/* =================== MODAIS =================== */
+function modal(t,body,foot){$('#modal').innerHTML=`<div class="mh">${t}</div><div class="mb">${body}</div><div class="mf">${foot}</div>`;$('#modal').classList.add('on');$('#ov2').classList.add('on')}
+function fecharModal(){$('#modal').classList.remove('on');$('#ov2').classList.remove('on')}
+$('#ov2').onclick=fecharModal;
+function modalPerda(l){
+  modal('Por que perdemos '+esc(l.Nome.split(' ')[0])+'?',`<div class="chips">${CFG.motivosPerda.map(m=>`<button class="chip" data-m="${esc(m)}">${esc(m)}</button>`).join('')}</div><div class="hint">Isso alimenta o gráfico “Por que perdemos”.</div>`,'<button class="btn" onclick="fecharModal()">Cancelar</button>');
+  $$('[data-m]').forEach(b=>b.onclick=()=>{fecharModal();salvar(l,{Status:'Perdido',Motivo_Perda:b.dataset.m},'Marcado como perdido')});
+}
+function modalValor(l){
+  modal('Fechou! 🎉 Qual foi o valor?',`<div class="fld"><label>Valor fechado (R$)</label><input id="mVal" inputmode="decimal" placeholder="ex: 18500" autofocus></div>`,'<button class="btn" id="mSem">Pular</button><button class="btn g" id="mOk">Salvar</button>');
+  $('#mOk').onclick=()=>{fecharModal();salvar(l,{Status:'Fechado',Valor:$('#mVal').value.replace(/[^\d,.]/g,'')},'Negócio fechado 🎉')};
+  $('#mSem').onclick=()=>{fecharModal();salvar(l,{Status:'Fechado'},'Negócio fechado 🎉')};setTimeout(()=>$('#mVal').focus(),50);
+}
+function modalNovo(){
+  const emps=CFG.empresas.filter(e=>DB.empresas[e.key]&&(PAPEL==='admin'||e.key===PAPEL));
+  modal('Novo contato',`<div class="fld"><label>Empresa</label><select id="nEm">${emps.map(e=>`<option value="${e.key}" ${EMP===e.key?'selected':''}>${esc(e.nome)}</option>`).join('')}</select></div>
+  <div class="fld"><label>Nome *</label><input id="nNo"></div><div class="r2"><div class="fld"><label>WhatsApp</label><input id="nWa" inputmode="tel" placeholder="(22) 99999-9999"></div><div class="fld"><label>E-mail</label><input id="nEm2"></div></div>
+  <div class="r2"><div class="fld"><label>Veio por</label><select id="nCa">${CFG.canais.filter(c=>c!=='Site').map(c=>`<option>${c}</option>`).join('')}</select></div><div class="fld"><label>Status</label><select id="nSt">${STATUS.map(s=>`<option>${s}</option>`).join('')}</select></div></div>
+  <div class="r2"><div class="fld"><label>Cliente</label><select id="nTp"><option>Novo</option><option>Antigo</option></select></div><div class="fld"><label>Valor (R$)</label><input id="nVa" inputmode="decimal"></div></div>
+  <div class="fld"><label>Observações</label><textarea id="nOb" rows="2"></textarea></div><div id="nDup"></div>`,'<button class="btn" onclick="fecharModal()">Cancelar</button><button class="btn g" id="nOk">Cadastrar</button>');
+  $('#nWa').oninput=()=>{const d=dig($('#nWa').value);const x=d.length>=10?DB.all.filter(l=>l._fone===d):[];$('#nDup').innerHTML=x.length?`<div class="callout a">Esse número já existe: ${x.map(l=>esc(l.Nome)+' ('+esc(curto(empCfg(l._emp).nome))+')').join(', ')}</div>`:'';if(x.length)$('#nTp').value='Antigo'};
+  $('#nOk').onclick=()=>{
+    const d={Nome:$('#nNo').value.trim(),WhatsApp:dig($('#nWa').value),Email:$('#nEm2').value.trim(),Canal:$('#nCa').value,Status:$('#nSt').value,Tipo_Cliente:$('#nTp').value,Valor:$('#nVa').value.replace(/[^\d,.]/g,''),Observacoes:$('#nOb').value};
+    if(!d.Nome)return toast('Coloque pelo menos o nome');const k=$('#nEm').value;fecharModal();toast('Cadastrando…');
+    api('novoLead',k,d).then(id=>{const l={...d,ID:id,Recebido_em:new Date().toISOString(),Status_Desde:new Date().toISOString()};DB.empresas[k].leads.push(l);DB=prep(DB);KNOWN&&KNOWN.add(k+'|'+id);render();toast('Contato cadastrado ✓')}).catch(e=>toast('Erro: '+(e.message||e)));
+  };setTimeout(()=>$('#nNo').focus(),50);
+}
+function modalNota(n){
+  const emps=CFG.empresas.filter(e=>DB.empresas[e.key]);const l=n.LeadID?DB.all.find(x=>x.ID===n.LeadID&&x._emp===n.Empresa):null;
+  modal(n.ID?'Editar nota':'Nova nota',`<div class="fld"><label>Título</label><input id="oTi" value="${esc(n.Titulo||'')}"></div>
+  <div class="fld"><label>Texto</label><textarea id="oTx" rows="8">${esc(n.Texto||'')}</textarea></div>
+  <div class="r2"><div class="fld"><label>Empresa</label><select id="oEm" ${l?'disabled':''}>${PAPEL==='admin'?'<option value="">Geral</option>':''}${emps.map(e=>`<option value="${e.key}" ${(n.Empresa||(EMP!=='all'?EMP:''))===e.key?'selected':''}>${esc(curto(e.nome))}</option>`).join('')}</select></div>
+  <div class="fld"><label>&nbsp;</label><label class="chk"><input type="checkbox" id="oFx" ${n.Fixada?'checked':''}> Fixar no topo</label></div></div>${l?`<div class="hint">Ligada ao contato <b>${esc(l.Nome)}</b></div>`:''}`,
+  `${n.ID?'<button class="btn red" id="oDel">Excluir</button>':''}${CFG.notionAtivo?'<button class="btn" id="oNo">Enviar ao Notion</button>':''}<button class="btn" onclick="fecharModal()">Cancelar</button><button class="btn g" id="oOk">Salvar</button>`);
+  const ler=()=>({...n,Titulo:$('#oTi').value,Texto:$('#oTx').value,Empresa:l?n.Empresa:$('#oEm').value,Fixada:$('#oFx').checked?'sim':'',Data:n.Data||new Date().toISOString()});
+  $('#oOk').onclick=()=>{const x=ler();if(!x.Titulo&&!x.Texto)return toast('Nota vazia');fecharModal();
+    const i=DB.notas.findIndex(z=>z.ID===x.ID);if(i>=0)DB.notas[i]=x;else{x.ID='tmp'+Date.now();DB.notas.push(x)}
+    if(x.LeadID&&i<0)DB.hist.push({Data:new Date().toISOString(),Empresa:x.Empresa,LeadID:x.LeadID,Tipo:'nota',Descricao:x.Titulo||'Nota adicionada'});
+    render();if(l)abrir(l._key,'notas');toast('Nota salva ✓');
+    api('salvarNota',{...x,ID:String(x.ID).startsWith('tmp')?'':x.ID}).then(id=>{x.ID=id}).catch(e=>toast('Erro: '+(e.message||e)))};
+  if($('#oDel'))$('#oDel').onclick=()=>{if(!confirm('Excluir esta nota?'))return;fecharModal();DB.notas=DB.notas.filter(z=>z.ID!==n.ID);render();if(l)abrir(l._key,'notas');api('excluirNota',n.ID).catch(e=>toast('Erro: '+(e.message||e)))};
+  if($('#oNo'))$('#oNo').onclick=()=>{const x=ler();toast('Enviando ao Notion…');api('enviarNotion',x.Titulo||'Nota',String(x.Texto).split('\n')).then(u=>{toast('Enviado ao Notion ✓');if(u)window.open(u,'_blank')}).catch(e=>toast('Erro: '+(e.message||e)))};
+}
+function notionLead(l){
+  const h=DB.hist.filter(x=>x.LeadID===l.ID&&x.Empresa===l._emp).map(x=>'• '+new Date(x.Data).toLocaleDateString('pt-BR')+' — '+x.Descricao);
+  const ns=DB.notas.filter(n=>n.LeadID===l.ID&&n.Empresa===l._emp).map(n=>'📝 '+(n.Titulo||'Nota')+': '+n.Texto);
+  const linhas=[`Empresa: ${empCfg(l._emp).nome}`,`WhatsApp: ${fmtFone(l.WhatsApp)}`,`E-mail: ${l.Email||'—'}`,`Status: ${l._st}`,`Canal: ${l._canal}`,`Valor: ${l._valor?R$(l._valor):'—'}`,`Chegou em: ${l._dt.toLocaleString('pt-BR')}`,`Observações: ${l.Observacoes||'—'}`,'— Histórico —',...h,'— Notas —',...ns];
+  toast('Enviando ao Notion…');api('enviarNotion',l.Nome+' · '+curto(empCfg(l._emp).nome),linhas).then(u=>{toast('Ficha enviada ao Notion ✓');if(u)window.open(u,'_blank')}).catch(e=>toast('Erro: '+(e.message||e)));
+}
+/* =================== AJUSTES =================== */
+let EDIT=null;
+function vAjustes(){
+  if(!EDIT)EDIT=JSON.parse(JSON.stringify(CFG));
+  const E=EDIT,me=st('pl_mk')||E.empresas[0].key;
+  const ms=(E.modelos[me]&&E.modelos[me].length?E.modelos[me]:null);
+  return topo('Ajustes','Tudo aqui muda o painel sem mexer em código')+`
+  <div class="grid g2e set">
+  <div class="panel"><h3>Empresas</h3><div class="hint" style="margin-bottom:10px">Cor · nome · tipo · ID da planilha (o pedaço do link entre /d/ e /edit). Tipo “Salão” ativa retornos, “Coworking” ativa a agenda de baias.</div>
+    ${E.empresas.map((e,i)=>`<div class="erow"><input type="color" data-ec="${i}" value="${e.cor}"><input class="inp" data-en="${i}" value="${esc(e.nome)}"><select class="sel" data-et="${i}">${[['padrao','Padrão'],['salao','Salão'],['coworking','Coworking']].map(([v,t])=>`<option value="${v}" ${e.tipo===v?'selected':''}>${t}</option>`).join('')}</select><input class="inp pid" data-ep="${i}" value="${esc(e.planilhaId)}" placeholder="ID da planilha"><button class="ic" data-ed="${i}" title="Remover">✕</button></div>`).join('')}
+    <button class="btn sm" id="eAdd">＋ Adicionar empresa (ex: Workaé)</button></div>
+  <div class="panel"><h3>Metas e alertas</h3><div class="r2">
+    <div class="fld"><label>Meta de resposta (horas)</label><input class="inp" type="number" step="0.5" id="aSla" value="${E.slaHoras}"></div>
+    <div class="fld"><label>Alerta vermelho após (horas)</label><input class="inp" type="number" id="aAl" value="${E.alertaHoras}"></div>
+    <div class="fld"><label>“Parado” após (dias)</label><input class="inp" type="number" id="aPa" value="${E.paradoDias}"></div>
+    <div class="fld"><label>Avisar retorno (dias antes)</label><input class="inp" type="number" id="aDa" value="${E.diasAntes}"></div></div>
+    <div class="fld" style="margin-top:12px"><label>Canais (separados por vírgula)</label><input class="inp" style="width:100%" id="aCa" value="${esc(E.canais.join(', '))}"></div>
+    <div class="fld" style="margin-top:12px"><label>Motivos de perda</label><input class="inp" style="width:100%" id="aMp" value="${esc(E.motivosPerda.join(', '))}"></div>
+    <div class="fld" style="margin-top:12px"><label>Baias do coworking</label><input class="inp" style="width:100%" id="aBa" value="${esc((E.baias||[]).join(', '))}"></div></div>
+  <div class="panel" style="grid-column:1/-1"><h3>Mensagens prontas<small>use {primeiro} {nome} {empresa} {baia} {inicio} {fim} {procedimento} {retorno} {valor}</small></h3>
+    <div class="chips" style="margin-bottom:12px">${E.empresas.map(e=>`<button class="chip ${me===e.key?'on':''}" data-mk="${e.key}">${esc(curto(e.nome))}</button>`).join('')}</div>
+    ${(ms||E.modelos.padrao).map((m,i)=>`<div class="mrow"><input class="inp" data-mt="${i}" value="${esc(m.t)}"><textarea class="inp" style="padding:8px;height:auto" data-mm="${i}">${esc(m.m)}</textarea><button class="ic" data-md="${i}">✕</button></div>`).join('')}
+    ${ms?'':'<div class="hint" style="margin-bottom:8px">Esta empresa usa as mensagens padrão. Edite para criar as dela.</div>'}<button class="btn sm" id="mAdd">＋ Adicionar mensagem</button></div>
+  <div class="panel"><h3>Procedimentos do salão</h3>${Object.entries(E.procedimentos).map(([p,d],i)=>`<div class="prow"><input class="inp" data-pn="${i}" value="${esc(p)}"><input class="inp" type="number" data-pd="${i}" value="${d}"><button class="ic" data-px="${i}">✕</button></div>`).join('')}
+    <button class="btn sm" id="pAdd">＋ Procedimento</button><div class="hint" style="margin-top:6px">Nome · em quantos dias refazer</div></div>
+  <div class="panel"><h3>Acesso e senhas</h3><div class="hint" style="margin-bottom:10px">Deixe a senha de administrador vazia para não pedir senha. Com senha: cada empresa só enxerga os próprios contatos.</div>
+    <div class="fld"><label>Senha do administrador (você)</label><input class="inp" style="width:100%" id="sAdm" value="${esc(E.senhas.admin||'')}"></div>
+    ${E.empresas.map(e=>`<div class="fld" style="margin-top:10px"><label>Senha · ${esc(curto(e.nome))}</label><input class="inp" style="width:100%" data-sk="${e.key}" value="${esc(E.senhas[e.key]||'')}"></div>`).join('')}</div>
+  <div class="panel"><h3>Notion</h3><div class="hint" style="margin-bottom:10px">1) Em notion.so/my-integrations crie uma integração e copie o token. 2) Crie um banco de dados no Notion e, nos “…” dele, conecte a integração. 3) Cole o token e o ID do banco (o código do link antes do “?v=”).</div>
+    <div class="fld"><label>Token da integração</label><input class="inp" style="width:100%" id="nTo" value="${esc(E.notion.token||'')}" placeholder="secret_… ou ntn_…"></div>
+    <div class="fld" style="margin-top:10px"><label>ID do banco de dados</label><input class="inp" style="width:100%" id="nDb" value="${esc(E.notion.databaseId||'')}"></div></div>
+  <div class="panel"><h3>Automações e relatórios</h3>
+    <div class="fld"><label>E-mails extras do relatório semanal</label><input class="inp" style="width:100%" id="aEm" value="${esc(E.emailsRelatorio||'')}" placeholder="rafael@…, tony@…"></div>
+    <div class="hint" style="margin:8px 0 12px">Todo dia às 8h: e-mail com o que fazer hoje. Toda segunda às 8h: resumo da semana.</div>
+    <div class="acts" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn" id="aGat">Ativar automações</button><button class="btn" id="aRel">Enviar relatório agora</button>${DB.baseUrl?`<a class="btn" href="${DB.baseUrl}" target="_blank">Abrir planilha base</a>`:''}</div></div>
+  <div class="panel"><h3>Modo demonstração</h3><div class="hint" style="margin-bottom:12px">Troca os dados reais por contatos fictícios, pra gravar vídeo ou mostrar o painel a um cliente. Nada é salvo nesse modo.</div>
+    <button class="btn ${DEMO?'pri':''}" id="aDemo">${DEMO?'Sair do modo demonstração':'Ativar modo demonstração'}</button></div>
+  </div>
+  <div style="position:sticky;bottom:12px;display:flex;justify-content:flex-end;gap:10px;margin-top:14px"><button class="btn" id="aCan">Descartar</button><button class="btn g" id="aSave" style="box-shadow:0 8px 30px rgba(14,159,110,.35)">Salvar ajustes</button></div>`;
+}
+vAjustes.after=()=>{
+  const E=EDIT,sync=()=>{
+    $$('[data-en]').forEach(x=>E.empresas[x.dataset.en].nome=x.value);$$('[data-ec]').forEach(x=>E.empresas[x.dataset.ec].cor=x.value);
+    $$('[data-et]').forEach(x=>E.empresas[x.dataset.et].tipo=x.value);$$('[data-ep]').forEach(x=>E.empresas[x.dataset.ep].planilhaId=x.value.trim().replace(/.*\/d\/([^/]+).*/,'$1'));
+    E.slaHoras=+$('#aSla').value||1;E.alertaHoras=+$('#aAl').value||24;E.paradoDias=+$('#aPa').value||5;E.diasAntes=+$('#aDa').value||15;
+    const lst=v=>v.split(',').map(s=>s.trim()).filter(Boolean);E.canais=lst($('#aCa').value);E.motivosPerda=lst($('#aMp').value);E.baias=lst($('#aBa').value);
+    const mk=st('pl_mk')||E.empresas[0].key;const tit=$$('[data-mt]'),txt=$$('[data-mm]');
+    if(tit.length){const arr=tit.map((x,i)=>({t:x.value,m:txt[i].value}));const pad=JSON.stringify(arr)===JSON.stringify(E.modelos.padrao);if(!pad||E.modelos[mk])E.modelos[mk]=arr}
+    const pn=$$('[data-pn]'),pd=$$('[data-pd]');E.procedimentos={};pn.forEach((x,i)=>{if(x.value.trim())E.procedimentos[x.value.trim()]=+pd[i].value||0});
+    E.senhas={admin:$('#sAdm').value};$$('[data-sk]').forEach(x=>E.senhas[x.dataset.sk]=x.value);
+    E.notion={token:$('#nTo').value.trim(),databaseId:$('#nDb').value.trim().replace(/.*notion\.so\/(?:[^/]+\/)?(?:[^-]*-)*([0-9a-f]{32}).*/i,'$1')};E.emailsRelatorio=$('#aEm').value;
+  };
+  $('#eAdd').onclick=()=>{sync();E.empresas.push({key:'emp'+Date.now().toString(36),nome:'Nova empresa',cor:'#2563EB',tipo:'padrao',planilhaId:''});render()};
+  $$('[data-ed]').forEach(b=>b.onclick=()=>{if(!confirm('Remover esta empresa do painel? A planilha não é apagada.'))return;sync();E.empresas.splice(+b.dataset.ed,1);render()});
+  $$('[data-mk]').forEach(b=>b.onclick=()=>{sync();sst('pl_mk',b.dataset.mk);render()});
+  $('#mAdd').onclick=()=>{sync();const mk=st('pl_mk')||E.empresas[0].key;E.modelos[mk]=(E.modelos[mk]&&E.modelos[mk].length?E.modelos[mk]:JSON.parse(JSON.stringify(E.modelos.padrao)));E.modelos[mk].push({t:'Nova mensagem',m:'Olá, {primeiro}! '});render()};
+  $$('[data-md]').forEach(b=>b.onclick=()=>{sync();const mk=st('pl_mk')||E.empresas[0].key;E.modelos[mk]=E.modelos[mk]||JSON.parse(JSON.stringify(E.modelos.padrao));E.modelos[mk].splice(+b.dataset.md,1);render()});
+  $('#pAdd').onclick=()=>{sync();E.procedimentos['Novo procedimento']=30;render()};
+  $$('[data-px]').forEach(b=>b.onclick=()=>{sync();const k=Object.keys(E.procedimentos)[+b.dataset.px];delete E.procedimentos[k];render()});
+  $('#aCan').onclick=()=>{EDIT=null;render();toast('Alterações descartadas')};
+  $('#aSave').onclick=()=>{sync();const novaSenha=E.senhas.admin&&E.senhas.admin!=='••••••'?E.senhas.admin:null;toast('Salvando…');
+    api('salvarConfig',E).then(()=>{if(novaSenha){SENHA=novaSenha;sst('pl_senha',novaSenha)}EDIT=null;toast('Ajustes salvos ✓');carregar()}).catch(e=>toast('Erro: '+(e.message||e)))};
+  $('#aGat').onclick=()=>{toast('Ativando…');api('instalarGatilhos').then(()=>toast('Automações ativas ✓ (diário 8h e segunda 8h)')).catch(e=>toast('Erro: '+(e.message||e)))};
+  $('#aRel').onclick=()=>{toast('Enviando…');api('enviarRelatorioAgora').then(()=>toast('Relatório enviado pro seu e-mail ✓')).catch(e=>toast('Erro: '+(e.message||e)))};
+  $('#aDemo').onclick=()=>{if(!IS_GAS&&!IS_API)return toast('Fora do Google o painel já roda em demonstração');sst('pl_demo',DEMO?'0':'1');location.reload()};
+  $$('#main input,#main select,#main textarea').forEach(x=>x.addEventListener('change',sync));
+};
+/* =================== LOGIN =================== */
+function telaLogin(){
+  $('#side').innerHTML='';$('#main').innerHTML=`<div class="login"><div class="logo" style="color:#fff">L</div><h2 style="font-size:20px">Painel de Leads</h2><div class="hint">Digite sua senha de acesso.</div>
+  <input class="inp" type="password" id="lgS" placeholder="Senha" style="width:100%"><button class="btn g" id="lgB" style="justify-content:center">Entrar</button></div>`;
+  const go=()=>{SENHA=$('#lgS').value;sst('pl_senha',SENHA);carregar()};$('#lgB').onclick=go;$('#lgS').onkeydown=e=>{if(e.key==='Enter')go()};$('#lgS').focus();
+  if(SENHA)toast('Senha incorreta');
+}
+/* =================== DEMO =================== */
+function demoApi(fn,a){
+  if(fn==='novoLead')return'demo'+Date.now();if(fn==='salvarNota')return a[0].ID||'demo'+Date.now();
+  if(fn==='salvarConfig'){Object.assign(DEMO_CFG,a[0]);return'ok'}if(fn==='enviarNotion')throw new Error('Indisponível no modo demonstração');return'ok';
+}
+let DEMO_CFG=null;
+function demoDados(){
+  const nomes=['Mariana Costa','Felipe Andrade','Juliana Rocha','Ricardo Mendes','Camila Duarte','Bruno Teixeira','Larissa Nunes','André Siqueira','Patrícia Lima','Thiago Barros','Fernanda Alves','Rodrigo Pires','Beatriz Moura','Lucas Farias','Renata Campos','Gustavo Reis','Aline Martins','Diego Ventura','Carla Brandão','Eduardo Lopes','Sofia Ramos','Vinícius Prado','Helena Castro','Otávio Nery'];
+  let seed=11;const r=()=>(seed=(seed*9301+49297)%233280)/233280,pick=a=>a[Math.floor(r()*a.length)];
+  const canais=['Site','Site','Site','Instagram','Instagram','Indicação','WhatsApp'];
+  const cfg=DEMO_CFG||{empresas:[{key:'rs',nome:'RS Woodworker',cor:'#0E9F6E',tipo:'padrao'},{key:'connect',nome:'Marcenaria Connect',cor:'#F5F6F4',tipo:'coworking'},{key:'tony',nome:'Tony Bernardino Coiffeur',cor:'#9CA3A0',tipo:'salao'}],
+    procedimentos:{'Balayage':90,'Mechas / Luzes':90,'Coloração':30,'Corte':45,'Progressiva / Alisamento':120,'Botox capilar':60},baias:['B01','B02','B03','B04','B05','B06'],diasAntes:15,slaHoras:1,alertaHoras:24,paradoDias:5,
+    motivosPerda:['Preço','Prazo','Sumiu / sem resposta','Fechou com outro','Fora do perfil','Outro'],canais:['Site','Instagram','WhatsApp','Indicação','Telefone','Presencial','Outro'],emailsRelatorio:'',senhas:{admin:''},notion:{token:'',databaseId:''},temSenha:false,notionAtivo:false,
+    modelos:{padrao:[{t:'Primeiro contato',m:'Olá, {primeiro}! Aqui é da {empresa}. Como podemos te ajudar?'},{t:'Follow-up',m:'Oi, {primeiro}! Ficou alguma dúvida?'}],
+      rs:[{t:'Primeiro contato',m:'Olá, {primeiro}! Aqui é da RS Woodworker. Qual ambiente você está pensando em planejar?'},{t:'Follow-up',m:'Oi, {primeiro}! Ficou alguma dúvida sobre o seu projeto?'},{t:'Orçamento enviado',m:'{primeiro}, seu orçamento de {valor} já está com você. Quer marcar uma conversa?'}],
+      connect:[{t:'Primeiro contato',m:'Olá, {primeiro}! Aqui é da Marcenaria Connect. Quer agendar uma visita?'},{t:'Confirmar reserva de baia',m:'{primeiro}, confirmando a baia {baia} de {inicio} até {fim}.'},{t:'Follow-up',m:'Oi, {primeiro}! Alguma dúvida sobre as baias?'}],
+      tony:[{t:'Primeiro contato',m:'Olá, {primeiro}! Aqui é do Tony Bernardino Coiffeur 💇 O que você quer fazer no cabelo?'},{t:'Lembrete de retorno',m:'Oi, {primeiro}! Seu {procedimento} completa o ciclo por volta de {retorno}. Vamos agendar?'},{t:'Follow-up',m:'Oi, {primeiro}! Bora marcar seu horário?'}]}};
+  DEMO_CFG=cfg;
+  const hist=[],procs=[],notas=[{ID:'n1',Data:new Date().toISOString(),Empresa:'',LeadID:'',Titulo:'Ideias de conteúdo — novembro',Texto:'Reels do antes/depois da cozinha\nCarrossel: 5 erros ao planejar closet\nStories com bastidores da marcenaria',Fixada:'sim'},
+    {ID:'n2',Data:new Date(Date.now()-3*864e5).toISOString(),Empresa:'rs',LeadID:'',Titulo:'Reunião com o Rafael',Texto:'Priorizar orçamentos acima de 15k. Mandar portfólio em PDF no primeiro contato.',Fixada:''}];
+  const mk=(k,i)=>{
+    const dt=new Date(Date.now()-Math.floor(r()*r()*330*864e5)-r()*12*36e5);dt.setHours(8+Math.floor(r()*13));
+    let s=pick(['Novo','Em conversa','Em conversa','Orçamento enviado','Agendado','Fechado','Fechado','Fechado','Perdido']);
+    const dias=(Date.now()-dt)/864e5;if(dias>20&&s==='Novo')s=pick(['Fechado','Perdido','Em conversa']);if(dias<1&&r()>.4)s='Novo';
+    const resp=s==='Novo'?'':new Date(dt.getTime()+(r()<.6?r()*1.2:r()*20)*36e5).toISOString();
+    const o={ID:k+i,Recebido_em:dt.toISOString(),Nome:pick(nomes),WhatsApp:'2299'+String(Math.floor(1e6+r()*8e6)),Email:r()>.5?'cliente'+i+'@gmail.com':'',Status:s,Canal:pick(canais),
+      Tipo_Cliente:r()>.8?'Antigo':'',Primeira_Resposta:resp,Ultimo_Contato:resp?resp.slice(0,10):'',Status_Desde:s==='Novo'?dt.toISOString():new Date(dt.getTime()+r()*12*864e5).toISOString(),
+      Valor:['Fechado','Orçamento enviado','Agendado'].includes(s)?String(k==='rs'?Math.round(6+r()*40)*1000:k==='connect'?Math.round(2+r()*12)*100:Math.round(2+r()*8)*50):'',
+      Motivo_Perda:s==='Perdido'?pick(['Preço','Preço','Prazo','Sumiu / sem resposta','Fechou com outro']):'',Lembrete_Em:['Em conversa','Orçamento enviado'].includes(s)&&r()>.5?addDias(Math.floor(r()*6)-3):'',Observacoes:''};
+    if(k==='rs')o.Mensagem=pick(['Cozinha planejada','Closet casal','Painel de TV','Home office','Banheiro']);
+    if(k==='connect'){if(r()>.45){const ini=new Date(Date.now()+(Math.floor(r()*40)-15)*864e5);const dur=pick([1,1,2,5,7,30]);Object.assign(o,{Baia:pick(cfg.baias),Periodo:dur>=30?'mensal':dur>=5?'semanal':'diaria',Inicio:ini.toISOString().slice(0,10),Fim:new Date(ini.getTime()+(dur-1)*864e5).toISOString().slice(0,10)})}else Object.assign(o,{Periodo:'visita',Mensagem:'Quero conhecer o espaço'})}
+    if(k==='tony'&&s==='Fechado'){const ps=Object.keys(cfg.procedimentos);let d=new Date(dt);for(let j=0;j<1+Math.floor(r()*3);j++){const p=pick(ps),dd=cfg.procedimentos[p];const prox=new Date(d.getTime()+dd*864e5);procs.push({ID:'p'+i+j,Empresa:'tony',LeadID:o.ID,Nome:o.Nome,WhatsApp:o.WhatsApp,Procedimento:p,Data:d.toISOString().slice(0,10),Dias:dd,Proximo:prox.toISOString().slice(0,10),Lembrete_Enviado:''});d=new Date(prox.getTime()+r()*20*864e5);if(d>Date.now())break}}
+    if(resp)hist.push({Data:resp,Empresa:k,LeadID:o.ID,Tipo:'contato',Descricao:'WhatsApp: Primeiro contato'});
+    if(s!=='Novo'&&s!=='Em conversa')hist.push({Data:o.Status_Desde,Empresa:k,LeadID:o.ID,Tipo:'status',Descricao:'Em conversa → '+s});
+    return o;
+  };
+  return{papel:'admin',cfg,geradoEm:new Date().toISOString(),baseUrl:'',historico:hist,notas,procedimentos:procs,
+    empresas:{rs:{leads:Array.from({length:70},(_,i)=>mk('rs',i))},connect:{leads:Array.from({length:45},(_,i)=>mk('connect',i))},tony:{leads:Array.from({length:80},(_,i)=>mk('tony',i))}}};
+}
+carregar();
+if('serviceWorker' in navigator&&IS_API)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
