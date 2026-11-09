@@ -166,6 +166,7 @@ tr.late td:first-child{box-shadow:inset 3px 0 0 var(--r)}
 .ov2{position:fixed;inset:0;background:rgba(11,13,12,.45);z-index:40;opacity:0;pointer-events:none;transition:.18s}.ov2.on{opacity:1;pointer-events:auto}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-weight:600;opacity:0;transition:.25s;z-index:60;max-width:90%;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
+.top h1 #bDica{vertical-align:middle;margin-left:4px;background:var(--gl);border-color:#BFE8D6;color:var(--gd)}
 .dica{background:linear-gradient(180deg,#F3FBF7,#fff);border:1px solid #BFE8D6;border-radius:14px;padding:14px 16px;margin-bottom:16px;position:relative}
 .dica h4{font-size:14px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
 .dica ul{margin:0 0 0 18px;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink2)}
@@ -406,7 +407,7 @@ function render(){
   $('#main').innerHTML=V(empN);
   bindTopo();if(V.after)V.after();
   $$('[data-fdica]').forEach(b=>b.onclick=()=>{sst('pl_dica_'+b.dataset.fdica,'x');if(VIEW!=='dicas')render()});
-  if($('#bDica'))$('#bDica').onclick=()=>{sst('pl_dica_'+VIEW,'');render()};
+  if($('#bDica'))$('#bDica').onclick=()=>{const ab=st('pl_dica_'+VIEW)!=='x'&&$('.dica');if(ab){sst('pl_dica_'+VIEW,'x');render();return}sst('pl_dica_'+VIEW,'');render();const d=$('.dica');if(d){d.scrollIntoView({behavior:'smooth',block:'center'});d.animate([{boxShadow:'0 0 0 4px #0E9F6E'},{boxShadow:'0 0 0 0 transparent'}],{duration:1200})}};
 }
 
 /* =================== HOJE =================== */
