@@ -164,8 +164,29 @@ tr.late td:first-child{box-shadow:inset 3px 0 0 var(--r)}
 .modal .mb{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
 .modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
 .ov2{position:fixed;inset:0;background:rgba(11,13,12,.45);z-index:40;opacity:0;pointer-events:none;transition:.18s}.ov2.on{opacity:1;pointer-events:auto}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-weight:600;opacity:0;transition:.25s;z-index:60;max-width:90%}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-weight:600;opacity:0;transition:.25s;z-index:60;max-width:90%;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
+.dica{background:linear-gradient(180deg,#F3FBF7,#fff);border:1px solid #BFE8D6;border-radius:14px;padding:14px 16px;margin-bottom:16px;position:relative}
+.dica h4{font-size:14px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.dica ul{margin:0 0 0 18px;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink2)}
+.dica .x{position:absolute;top:8px;right:10px;border:0;background:none;font-size:20px;color:var(--mut);cursor:pointer}
+.dicas{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.dicas .dica{margin:0}.passos{counter-reset:p}.passos li{list-style:none;position:relative;padding-left:30px;margin-bottom:10px;font-size:14px}
+.passos li::before{counter-increment:p;content:counter(p);position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;background:var(--g);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center}
+.bnav{display:none}
+.prog{height:10px;background:#EEF0ED;border-radius:6px;overflow:hidden;margin:8px 0 4px}.prog i{display:block;height:100%;background:linear-gradient(90deg,#0E9F6E,#34D399);border-radius:6px;transition:width .6s}
+.stchips{display:flex;gap:6px;flex-wrap:wrap}.stchip{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.stchip.on{color:#fff;border-color:transparent}
+.bigwa{display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:12px;background:#0E9F6E;color:#fff;font-weight:700;font-size:15px;text-decoration:none}
+.bigwa svg{width:22px;height:22px}.bigwa svg path{fill:#fff}
+details.mais summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--ink2);padding:10px 0;list-style:none}details.mais summary::before{content:'▸ '}details.mais[open] summary::before{content:'▾ '}
+details.mais>div{display:flex;flex-direction:column;gap:14px}
+.confete{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}.confete i{position:absolute;top:-20px;font-style:normal;font-size:22px;animation:cai 1.8s ease-in forwards}
+@keyframes cai{to{transform:translateY(110vh) rotate(540deg);opacity:.2}}
+.loginbg{position:fixed;inset:0;background:radial-gradient(60% 50% at 20% 20%,rgba(14,159,110,.55),transparent 70%),radial-gradient(50% 50% at 85% 80%,rgba(52,211,153,.35),transparent 70%),#0B0D0C;z-index:0}
+.loginbg::after{content:'';position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.login{position:relative;z-index:1;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.sheet .nav{color:var(--ink);background:#F5F6F4;margin-bottom:6px}.sheet .nav.on{background:var(--gl)}
 .loading{padding:80px;text-align:center;color:var(--mut)}
 .login{max-width:360px;margin:12vh auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px}
 /* settings */
@@ -181,7 +202,13 @@ tr.late td:first-child{box-shadow:inset 3px 0 0 var(--r)}
   .app{grid-template-columns:1fr}
   .side{position:sticky;top:0;z-index:20;height:auto;flex-direction:row;overflow-x:auto;padding:8px;gap:4px}
   .brand,.sec,.side-foot{display:none}.nav{white-space:nowrap;width:auto;padding:8px 10px}
-  main{padding:16px 12px 80px}.search{width:100%}.tools{width:100%}.g2e{grid-template-columns:1fr}
+  .side{display:none!important}main{padding:16px 12px 96px}
+  .bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:25;background:#0B0D0C;padding:6px 6px calc(6px + env(safe-area-inset-bottom));justify-content:space-around}
+  .bnav button{flex:1;border:0;background:none;color:#9CA3A0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:6px 0;border-radius:10px;position:relative}
+  .bnav button b{font-size:20px;line-height:1;font-weight:400}.bnav button.on{color:#fff;background:#171B19}
+  .bnav .bd{position:absolute;top:2px;right:22%;background:var(--r);color:#fff;font-size:10px;border-radius:10px;padding:0 5px}
+  .top h1{font-size:21px}
+  .toast{bottom:92px}.search{width:100%}.tools{width:100%}.g2e{grid-template-columns:1fr}
   .kpis{grid-template-columns:1fr 1fr}.kpi .v{font-size:24px}
   table.resp thead{display:none}table.resp tr{display:block;border-bottom:1px solid var(--line);padding:8px 4px}
   table.resp td{display:flex;justify-content:space-between;gap:10px;border:0;padding:5px 12px}
@@ -196,6 +223,7 @@ tr.late td:first-child{box-shadow:inset 3px 0 0 var(--r)}
   <aside class="side" id="side"></aside>
   <main id="main"><div class="loading">Carregando…</div></main>
 </div>
+<nav class="bnav" id="bnav"></nav>
 <div class="ov" id="ov"></div>
 <aside class="drawer" id="drawer"></aside>
 <div class="ov2" id="ov2"></div>
@@ -296,13 +324,28 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clea
 /* =================== SIDEBAR =================== */
 const VIEWS=[
   ['hoje','☀','Hoje'],['painel','◧','Visão geral'],['kanban','▥','Funil (Kanban)'],['contatos','☰','Contatos'],
-  ['agenda','▦','Agenda de baias','coworking'],['retornos','↻','Retornos do salão','salao'],['notas','✎','Notas'],['relatorios','📈','Relatórios'],['ajustes','⚙','Ajustes','admin']];
+  ['agenda','▦','Agenda de baias','coworking'],['retornos','↻','Retornos do salão','salao'],['notas','✎','Notas'],['relatorios','📈','Relatórios'],['dicas','💡','Dicas e ajuda'],['ajustes','⚙','Ajustes','admin']];
+const DICAS={
+hoje:{t:'Hoje: sua lista do dia',i:['Comece o dia aqui. Tudo que precisa de ação aparece separado por bloco.','<b>Responder agora</b>: quem chamou e ainda não teve retorno. O mais antigo fica em cima.','Toque no <b>WhatsApp verde</b>: a mensagem abre pronta e o contato vai sozinho pra "Em conversa".','Toque no <b>✓</b> se você já falou com a pessoa por outro meio.','A meta é zerar o número vermelho de "Tarefas pra hoje".']},
+painel:{t:'Visão geral: como está o negócio',i:['Números do período escolhido (7, 30, 90 dias…).','<b>Sem resposta</b> em vermelho = gente esperando você.','<b>Funil</b>: de cada 100 contatos, quantos conversaram, receberam orçamento e fecharam.','<b>De onde vêm</b>: mostra se o cliente veio do site, Instagram, indicação…','Clique em qualquer contato da lista pra abrir a ficha dele.']},
+kanban:{t:'Funil: arraste e solte',i:['Cada coluna é uma etapa da venda. Cada cartão é um cliente.','No computador, <b>arraste o cartão</b> pra próxima coluna quando a negociação avançar.','Ao mover pra <b>Fechado</b>, o painel pergunta o valor. Pra <b>Perdido</b>, pergunta o motivo.','Cartão com borda vermelha = sem resposta há muito tempo.','No celular, toque no cartão e mude o status na ficha.']},
+contatos:{t:'Contatos: a lista completa',i:['Use a <b>busca</b> pra achar por nome, telefone ou anotação.','Os botões de cima filtram por etapa (Novo, Em conversa…).','Dá pra mudar o <b>status direto na lista</b>, sem abrir a ficha.','<b>Antigo</b> = já foi cliente. <b>2x</b> = o mesmo telefone entrou mais de uma vez.','<b>⬇ Excel</b> baixa a lista filtrada.']},
+agenda:{t:'Agenda de baias',i:['Cada linha é uma baia e cada quadrinho é um dia do mês.','<b>Verde escuro</b> = reserva confirmada. <b>Verde claro</b> = pedido ainda não confirmado. <b>Vermelho</b> = duas pessoas no mesmo dia.','Toque num quadrinho colorido pra abrir o cliente.','Pra confirmar uma reserva, mude o status do cliente pra Agendado ou Fechado.']},
+retornos:{t:'Retornos do salão',i:['Abra a cliente, vá na aba <b>Salão</b> e registre o atendimento (ex.: Balayage, hoje).','O painel calcula sozinho quando ela precisa voltar.','15 dias antes, ela aparece aqui e em "Hoje", com a mensagem de lembrete pronta.','Você também recebe um e-mail às 8h com quem chamar.']},
+notas:{t:'Notas',i:['Anote ideias, reuniões, combinados.','Nota <b>Geral</b> ou de uma empresa. <b>Fixar</b> deixa no topo.','Pra anotar sobre um cliente específico, abra a ficha dele e vá na aba Notas.','Com o Notion conectado em Ajustes, dá pra mandar a nota pro Notion.']},
+relatorios:{t:'Relatórios',i:['Faturamento, ticket médio e tempo até fechar dependem de você <b>preencher o valor</b> quando fecha.','<b>Por que perdemos</b> mostra onde a venda está escapando.','<b>Quando chegam</b>: quanto mais verde, mais contatos naquele dia e horário.','<b>⎙ PDF</b> gera o relatório pra mandar pro sócio.']},
+ajustes:{t:'Ajustes',i:['Aqui você muda o painel sem mexer em código.','Mensagens prontas, procedimentos do salão, metas e senhas.','Pra adicionar a Workaé: Empresas → + Adicionar e cole o ID da planilha.','Sempre clique em <b>Salvar ajustes</b> no final.']}
+};
+function caixaDica(v,force){const d=DICAS[v];if(!d)return'';if(!force&&st('pl_dica_'+v)==='x')return'';return`<div class="dica"><button class="x" data-fdica="${v}">×</button><h4>💡 ${d.t}</h4><ul>${d.i.map(x=>`<li>${x}</li>`).join('')}</ul></div>`}
+function vDicas(){return topo('Dicas e ajuda','Como usar cada parte do painel')+`<div class="panel" style="margin-bottom:14px"><h3>Primeiros passos</h3><ol class="passos" style="padding:0"><li>Abra <b>Hoje</b> todo dia e zere a lista.</li><li>Responda pelo botão do <b>WhatsApp</b> do painel, assim tudo fica registrado.</li><li>Quando a conversa avançar, mude a etapa (lista ou Funil).</li><li>Fechou? Coloque o <b>valor</b>. Perdeu? Escolha o <b>motivo</b>.</li><li>Cliente que chegou por fora do site? <b>＋ Novo contato</b>.</li><li>No celular: Chrome → ⋮ → <b>Instalar app</b>.</li></ol></div><div class="dicas">${Object.keys(DICAS).map(k=>caixaDica(k,true)).join('')}</div>`}
+
 function contHoje(){return tarefasHoje().total}
 function renderSide(){
   const sc=DB.all.filter(l=>!hideT()||!l._teste);
   const nov=k=>sc.filter(l=>(k==='all'||l._emp===k)&&l._st==='Novo').length;
-  let h=`<div class="brand"><div class="logo">L</div><div><b>Painel de Leads</b><small>Central de contatos</small></div></div><div class="sec">Áreas</div>`;
-  VIEWS.forEach(([k,i,t,req])=>{
+  let h=`<div class="brand"><div class="logo">L</div><div><b>Painel de Leads</b><small>Central de contatos</small></div></div><div class="sec">Principal</div>`;
+  const visiveis=VIEWS.filter(([k,i,t,req])=>!(req==='admin'&&PAPEL!=='admin')&&!(req&&req!=='admin'&&!temTipo(req)));
+  [...visiveis.filter(v=>PRINC.includes(v[0])),null,...visiveis.filter(v=>!PRINC.includes(v[0]))].forEach(v=>{if(!v){h+=`<div class="sec">Mais</div>`;return}const [k,i,t,req]=v;
     if(req==='admin'&&PAPEL!=='admin')return;if(req&&req!=='admin'&&!temTipo(req))return;
     let c='';if(k==='hoje'){const n=contHoje();c=`<span class="cnt ${n?'al':''}">${n}</span>`}
     h+=`<button class="nav ${VIEW===k?'on':''}" data-v="${k}"><span class="ic2">${i}</span>${t}${c}</button>`;
@@ -311,14 +354,32 @@ function renderSide(){
   if(PAPEL==='admin')h+=`<button class="nav ${EMP==='all'?'on':''}" data-e="all"><span class="ic2">◎</span>Todas<span class="cnt ${nov('all')?'al':''}">${nov('all')}</span></button>`;
   CFG.empresas.filter(e=>DB.empresas[e.key]).forEach(e=>h+=`<button class="nav ${EMP===e.key?'on':''}" data-e="${e.key}"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}<span class="cnt ${nov(e.key)?'al':''}">${nov(e.key)}</span></button>`);
   h+=`<div class="side-foot">${DEMO?'<b style="color:#F5D7A8">Modo demonstração</b><br>':''}Atualizado ${new Date(DB.geradoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}<br>${CFG.temSenha?'<a id="sair">Sair</a>':''}</div>`;
-  $('#side').innerHTML=h;
+  $('#side').innerHTML=h;renderBnav(visiveis,nov);
   $$('.nav[data-v]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.v;STAT='Todos';render();scrollTo(0,0)});
   $$('.nav[data-e]').forEach(b=>b.onclick=()=>{EMP=b.dataset.e;if(['agenda','retornos'].includes(VIEW)&&!temTipo(VIEW==='agenda'?'coworking':'salao'))VIEW='painel';render()});
   if($('#sair'))$('#sair').onclick=()=>{sst('pl_senha','');SENHA='';location.reload()};
 }
+const PRINC=['hoje','kanban','contatos','relatorios'];
+function renderBnav(vis,nov){
+  const nh=contHoje(),lab={hoje:'Hoje',kanban:'Funil',contatos:'Contatos',relatorios:'Números'};
+  $('#bnav').innerHTML=PRINC.map(k=>{const v=VIEWS.find(x=>x[0]===k);return`<button class="${VIEW===k?'on':''}" data-bv="${k}"><b>${v[1]}</b>${lab[k]}${k==='hoje'&&nh?`<span class="bd">${nh}</span>`:''}</button>`}).join('')+`<button class="${PRINC.includes(VIEW)?'':'on'}" id="bMais"><b>☰</b>Mais</button>`;
+  $$('[data-bv]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.bv;STAT='Todos';render();scrollTo(0,0)});
+  $('#bMais').onclick=()=>{
+    const it=vis.filter(v=>!PRINC.includes(v[0])).map(([k,i,t])=>`<button class="nav ${VIEW===k?'on':''}" data-mv="${k}"><span class="ic2">${i}</span>${t}</button>`).join('');
+    const em=(PAPEL==='admin'?`<button class="nav ${EMP==='all'?'on':''}" data-me="all"><span class="ic2">◎</span>Todas as empresas<span class="cnt">${nov('all')}</span></button>`:'')+CFG.empresas.filter(e=>DB.empresas[e.key]).map(e=>`<button class="nav ${EMP===e.key?'on':''}" data-me="${e.key}"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}<span class="cnt">${nov(e.key)}</span></button>`).join('');
+    modal('Menu',`<div class="sheet"><div class="hint" style="margin-bottom:8px">Empresa</div>${em}<div class="hint" style="margin:14px 0 8px">Outras áreas</div>${it}${CFG.temSenha?'<button class="nav" id="mSair"><span class="ic2">⎋</span>Sair</button>':''}</div>`,'<button class="btn" onclick="fecharModal()">Fechar</button>');
+    $$('[data-mv]').forEach(b=>b.onclick=()=>{fecharModal();VIEW=b.dataset.mv;STAT='Todos';render();scrollTo(0,0)});
+    $$('[data-me]').forEach(b=>b.onclick=()=>{fecharModal();EMP=b.dataset.me;if(['agenda','retornos'].includes(VIEW)&&!temTipo(VIEW==='agenda'?'coworking':'salao'))VIEW='hoje';render()});
+    if($('#mSair'))$('#mSair').onclick=()=>{sst('pl_senha','');SENHA='';location.reload()};
+  };
+}
+function feitosHoje(){return +(st('pl_feito_'+hojeISO())||0)}
+function marcarFeito(){sst('pl_feito_'+hojeISO(),feitosHoje()+1)}
+function confete(){const c=document.createElement('div');c.className='confete';c.innerHTML=Array.from({length:40},()=>`<i style="left:${Math.random()*100}%;animation-delay:${Math.random()*.6}s">${['🎉','✨','💚','🟢','⭐'][Math.floor(Math.random()*5)]}</i>`).join('');document.body.appendChild(c);setTimeout(()=>c.remove(),2600)}
 function topo(t,s,extra){
-  return`<div class="top"><div><h1>${t}</h1><div class="sub">${s}</div></div><div class="tools">${DEMO?'<span class="demo-tag">Modo demonstração</span>':''}${extra||''}
-  <button class="btn g" id="bNovo">＋ Novo contato</button><button class="btn pri" id="bReload" title="Atualizar">↻</button></div></div>`;
+  const dk=DICAS[VIEW]&&VIEW!=='dicas'?`<button class="btn sm" id="bDica" title="Dicas desta tela">💡 Dicas</button>`:'';
+  return`<div class="top"><div><h1>${t} ${dk}</h1><div class="sub">${s}</div></div><div class="tools">${DEMO?'<span class="demo-tag">Modo demonstração</span>':''}${extra||''}
+  <button class="btn g" id="bNovo">＋ Novo contato</button><button class="btn pri" id="bReload" title="Atualizar">↻</button></div></div>${VIEW!=='dicas'?caixaDica(VIEW):''}`;
 }
 function filtros(){
   const p=st('pl_per')||'30';
@@ -341,9 +402,11 @@ function bindTopo(){
 function render(){
   renderSide();
   const empN=EMP==='all'?'Todas as empresas':empCfg(EMP).nome;
-  const V={hoje:vHoje,painel:vPainel,kanban:vKanban,contatos:vContatos,agenda:vAgenda,retornos:vRetornos,notas:vNotas,relatorios:vRelatorios,ajustes:vAjustes}[VIEW]||vHoje;
+  const V={hoje:vHoje,painel:vPainel,kanban:vKanban,contatos:vContatos,agenda:vAgenda,retornos:vRetornos,notas:vNotas,relatorios:vRelatorios,ajustes:vAjustes,dicas:vDicas}[VIEW]||vHoje;
   $('#main').innerHTML=V(empN);
   bindTopo();if(V.after)V.after();
+  $$('[data-fdica]').forEach(b=>b.onclick=()=>{sst('pl_dica_'+b.dataset.fdica,'x');if(VIEW!=='dicas')render()});
+  if($('#bDica'))$('#bDica').onclick=()=>{sst('pl_dica_'+VIEW,'');render()};
 }
 
 /* =================== HOJE =================== */
@@ -372,7 +435,9 @@ function vHoje(empN){
   const fmtH=h=>h===null?'—':h<1?Math.round(h*60)+' min':h.toFixed(1).replace('.',',')+'h';
   const bloco=(tit,cor,arr,fn,vazio)=>`<div class="panel"><h3><span style="color:${cor}">●</span>${tit}<small>${arr.length}</small></h3>${arr.length?`<div class="todo">${arr.slice(0,12).map(fn).join('')}</div>${arr.length>12?`<div class="hint" style="margin-top:8px">+${arr.length-12} na lista de Contatos</div>`:''}`:`<div class="hint">${vazio}</div>`}</div>`;
   const sd=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  const fh=feitosHoje(),totDia=fh+t.total,pc=totDia?Math.round(fh/totDia*100):100;
   return topo('Hoje',`${sd.charAt(0).toUpperCase()+sd.slice(1)} · ${empN}`)+`
+  <div class="panel" style="margin-bottom:14px"><h3>${t.total?`Faltam <span style="color:var(--r)">${t.total}</span> tarefas hoje`:'🎉 Lista do dia zerada!'}<small>${fh} feitas</small></h3><div class="prog"><i style="width:${pc}%"></i></div><div class="hint">${t.total?(pc>=75?'Falta pouco, vai lá!':pc>=40?'Mais da metade… quase lá.':'Comece pelo bloco vermelho: quem está esperando há mais tempo.'):'Tudo em dia. Bom trabalho!'}</div></div>
   <div class="kpis">
     <div class="kpi ${t.total?'red':'grn'}"><div class="l">Tarefas pra hoje</div><div class="v">${t.total}</div><div class="d">${t.total?'vamos zerar essa lista':'tudo em dia ✓'}</div></div>
     <div class="kpi"><div class="l">Entraram hoje</div><div class="v">${hojeN}</div><div class="d">novos contatos</div></div>
@@ -616,6 +681,7 @@ function abrir(key,tab){
   $$('.tab').forEach(t=>t.onclick=()=>abrir(key,t.dataset.t));
   $$('#drawer [data-wa]').forEach(a=>a.addEventListener('click',()=>registrarContato(a.dataset.wa,'WhatsApp: '+(a.dataset.t||'mensagem'))));
   $$('#drawer [data-lem]').forEach(b=>b.onclick=()=>{$('#fLe').value=addDias(+b.dataset.lem)});
+  $$('[data-stc]').forEach(b=>b.onclick=()=>mudarStatus(l._key,b.dataset.stc));
   if($('#fSt'))$('#fSt').onchange=()=>{$('#boxPerda').style.display=$('#fSt').value==='Perdido'?'':'none'};
   if($('#bProc'))$('#bProc').onclick=salvarProc;
   if($('#fPr'))$('#fPr').onchange=()=>{const d=CFG.procedimentos[$('#fPr').value];if(d)$('#fDi').value=d};
@@ -635,13 +701,16 @@ function tDados(l){
     ${e.tipo==='coworking'?`<div><span>Pedido</span>${esc(l.Periodo)||'—'}</div><div><span>Baia</span>${esc(l.Baia)||'—'}</div><div><span>Início</span>${fmtDia(l.Inicio)||'—'}</div><div><span>Fim</span>${fmtDia(l.Fim)||'—'}</div>`:''}
     ${l.Mensagem?`<div class="full"><span>Mensagem</span>${esc(l.Mensagem)}</div>`:''}
     <div><span>Primeira resposta</span>${l._resp!==null?(l._resp<1?Math.round(l._resp*60)+' min':l._resp.toFixed(1)+'h'):'—'}</div><div><span>Último contato</span>${fmtDia(l.Ultimo_Contato)||'—'}</div></div>
-  <div class="r2"><div class="fld"><label>Status</label><select id="fSt">${STATUS.map(s=>`<option ${s===l._st?'selected':''}>${s}</option>`).join('')}</select></div>
+  ${(()=>{const md=(l._st==='Novo'?modelos(l._emp)[0]:(modelos(l._emp).find(m=>/follow/i.test(m.t))||modelos(l._emp)[0]))||{t:'',m:''};const u=wa(l,preencher(md.m,l));return u?`<a class="bigwa" target="_blank" href="${u}" data-wa="${esc(l._key)}" data-t="${esc(md.t)}">${IW} ${l._st==='Novo'?'Responder no WhatsApp':'Chamar no WhatsApp'}</a><div class="hint" style="text-align:center;margin-top:-8px">Abre com a mensagem “${esc(md.t)}” pronta. Outras na aba Mensagens.</div>`:''})()}
+  <div class="fld"><label>Em que etapa está?</label><div class="stchips">${STATUS.map((s,i)=>`<button class="stchip ${s===l._st?'on':''}" style="${s===l._st?'background:'+STC[i]:''}" data-stc="${s}">${s}</button>`).join('')}</div></div>
+  <details class="mais"><summary>Mais detalhes (valor, lembrete, observações…)</summary><div>
+  <div class="r2" style="grid-template-columns:1fr"><div class="fld" style="display:none"><label>Status</label><select id="fSt">${STATUS.map(s=>`<option ${s===l._st?'selected':''}>${s}</option>`).join('')}</select></div>
   <div class="fld"><label>Cliente</label><select id="fTp"><option value="">—</option>${['Novo','Antigo'].map(t=>`<option ${(l.Tipo_Cliente||(l._antigo?'Antigo':''))===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
   <div id="boxPerda" style="${l._st==='Perdido'?'':'display:none'}" class="fld"><label>Motivo da perda</label><select id="fMp"><option value="">—</option>${CFG.motivosPerda.map(m=>`<option ${l.Motivo_Perda===m?'selected':''}>${m}</option>`).join('')}</select></div>
   <div class="r2"><div class="fld"><label>Valor (R$)</label><input id="fVa" inputmode="decimal" value="${esc(l.Valor||'')}" placeholder="orçamento ou fechado"></div>
   <div class="fld"><label>Canal</label><select id="fCa">${CFG.canais.map(c=>`<option ${l._canal===c?'selected':''}>${c}</option>`).join('')}</select></div></div>
   <div class="fld"><label>Lembrete de follow-up</label><input type="date" id="fLe" value="${String(l.Lembrete_Em||'').slice(0,10)}"><div class="quick">${[[1,'Amanhã'],[3,'3 dias'],[7,'1 semana'],[30,'1 mês']].map(([d,t])=>`<button class="btn sm" data-lem="${d}">${t}</button>`).join('')}<button class="btn sm" onclick="$('#fLe').value=''">Limpar</button></div></div>
-  <div class="fld"><label>Observações</label><textarea id="fOb" rows="3" placeholder="O que foi conversado, preferências, detalhes do projeto…">${esc(l.Observacoes)}</textarea></div>`;
+  <div class="fld"><label>Observações</label><textarea id="fOb" rows="3" placeholder="O que foi conversado, preferências, detalhes do projeto…">${esc(l.Observacoes)}</textarea></div></div></details>`;
 }
 function tSalao(l){
   const ps=DB.procs.filter(p=>p.LeadID===l.ID&&p.Empresa===l._emp).sort((a,b)=>String(b.Data).localeCompare(String(a.Data)));
@@ -675,11 +744,12 @@ function salvar(l,c,msg,histDesc){
   const orig={...l};
   if(c.Status!==undefined&&c.Status!==l._st){c.Status_Desde=new Date().toISOString();DB.hist.push({Data:new Date().toISOString(),Empresa:l._emp,LeadID:l.ID,Tipo:'status',Descricao:l._st+' → '+c.Status})}
   if(c.Ultimo_Contato!==undefined){if(!l.Primeira_Resposta){c.Primeira_Resposta=new Date().toISOString();l._resp=(new Date()-l._dt)/36e5}DB.hist.push({Data:new Date().toISOString(),Empresa:l._emp,LeadID:l.ID,Tipo:'contato',Descricao:histDesc||'Contato registrado'})}
+  if(c.Status==='Fechado'&&l._st!=='Fechado')setTimeout(confete,200);
   aplicar(l,c);render();if($('#drawer').classList.contains('on'))abrir(l._key);toast(msg);
   const envio={...c};if(histDesc)envio._via=histDesc;delete envio.Primeira_Resposta;delete envio.Status_Desde;
   api('atualizarLead',l._emp,l.ID,envio).catch(e=>{Object.assign(l,orig);render();toast('Erro ao salvar: '+(e.message||e))});
 }
-function registrarContato(key,via){const l=byKey(key);if(!l)return;const c={Ultimo_Contato:hojeISO()};if(l._st==='Novo')c.Status='Em conversa';setTimeout(()=>salvar(l,c,l._st==='Novo'?'Marcado como “Em conversa”':'Contato registrado ✓',via),300)}
+function registrarContato(key,via){const l=byKey(key);if(!l)return;const antes=tarefasHoje().total;marcarFeito();setTimeout(()=>{if(antes>0&&tarefasHoje().total===0){confete();toast('🎉 Lista do dia zerada!')}},900);const c={Ultimo_Contato:hojeISO()};if(l._st==='Novo')c.Status='Em conversa';setTimeout(()=>salvar(l,c,l._st==='Novo'?'Marcado como “Em conversa”':'Contato registrado ✓',via),300)}
 function mudarStatus(key,s){
   const l=byKey(key);if(!l||l._st===s)return;
   if(s==='Perdido')return modalPerda(l);
@@ -821,7 +891,7 @@ vAjustes.after=()=>{
 };
 /* =================== LOGIN =================== */
 function telaLogin(){
-  $('#side').innerHTML='';$('#main').innerHTML=`<div class="login"><div class="logo" style="color:#fff">L</div><h2 style="font-size:20px">Painel de Leads</h2><div class="hint">Digite sua senha de acesso.</div>
+  $('#side').innerHTML='';$('#bnav').innerHTML='';$('#main').innerHTML=`<div class="loginbg"></div><div class="login"><div class="logo" style="color:#fff">L</div><h2 style="font-size:20px">Painel de Leads</h2><div class="hint">Digite sua senha de acesso.</div>
   <input class="inp" type="password" id="lgS" placeholder="Senha" style="width:100%"><button class="btn g" id="lgB" style="justify-content:center">Entrar</button></div>`;
   const go=()=>{SENHA=$('#lgS').value;sst('pl_senha',SENHA);carregar()};$('#lgB').onclick=go;$('#lgS').onkeydown=e=>{if(e.key==='Enter')go()};$('#lgS').focus();
   if(SENHA)toast('Senha incorreta');
