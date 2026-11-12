@@ -280,6 +280,22 @@ body.dark .hero{background:radial-gradient(80% 120% at 100% 0%,rgba(20,184,127,.
   table.resp td.who{display:block}table.resp td.who::before,table.resp td.ac::before{display:none}
   .r3{grid-template-columns:1fr 1fr}.erow{grid-template-columns:28px 1fr 90px;}.erow .pid{grid-column:1/-1}
 }
+.hero.semring{grid-template-columns:1fr}
+.filah{display:flex;align-items:baseline;justify-content:space-between;margin:4px 2px 10px}.filah h3{font-family:'Bricolage Grotesque',Inter,sans-serif;font-size:22px;letter-spacing:-.5px;margin:0}.filah span{color:var(--mut);font-weight:600}
+.fila{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-bottom:18px}
+.fc{display:flex;align-items:center;gap:14px;padding:16px 16px 16px 20px;border-radius:16px;background:var(--card);border:1px solid var(--line);position:relative;overflow:hidden}
+.fc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--ec)}
+.fcm{flex:1;min-width:0;cursor:pointer}.fc .nm{display:block;font-size:19px;font-weight:700;margin:6px 0 6px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mot{display:inline-block;font-size:12px;font-weight:700;color:var(--mc);background:color-mix(in srgb,var(--mc) 16%,transparent);padding:3px 9px;border-radius:99px}
+.emps{display:flex;gap:6px;flex-wrap:wrap}.ep{font-size:13px;font-weight:600;color:var(--ink);display:inline-flex;align-items:center;gap:6px}.ep::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--ec)}
+.fc .det{font-size:14px;color:var(--ink2);margin-top:5px}
+.fca{display:flex;flex-direction:column;gap:8px}.fca .ic,.fca .wa,.fca a{width:52px!important;height:52px!important;border-radius:14px!important}
+.fila.vazia{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:30px 20px;border:1px dashed var(--line);border-radius:18px}.fila.vazia .okb{width:54px;height:54px;border-radius:50%;background:var(--gl);color:var(--g);display:grid;place-items:center;font-size:26px;font-weight:700}.fila.vazia b{font-size:20px}.fila.vazia span{color:var(--ink2);max-width:40ch}
+body.dark .fc{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015))}
+@media(max-width:860px){.fila{grid-template-columns:1fr}.fc .nm{font-size:20px}}
+@media(max-width:860px){.hero{grid-template-columns:1fr auto!important;gap:12px;padding:16px 16px 14px;align-items:start}.hero.semring{grid-template-columns:1fr!important}.hero h2{font-size:21px!important;letter-spacing:-.6px;margin:4px 0 10px}.hero .sau{font-size:13px}.ring,.ring svg{width:84px!important;height:84px!important;margin:0!important}.ring small{display:none}.ring b{font-size:20px!important}.hero .linha{gap:8px;font-size:12px}}
+.fca a.ic[href]{background:#14B87F!important;border-color:#14B87F!important;color:#fff!important}.fca a.ic[href] svg{fill:#fff}
+.fmais{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:15px;margin:-6px 0 18px}
 </style>
 </head>
 <body>
@@ -376,7 +392,9 @@ function idade(l){const h=horas(l);if(h<1)return Math.max(1,Math.round(h*60))+' 
 const R$=v=>'R$ '+Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:0});
 const R$k=v=>v>=1e6?'R$ '+(v/1e6).toFixed(1).replace('.',',')+'M':v>=1e3?'R$ '+(v/1e3).toFixed(1).replace('.',',')+'k':R$(v);
 const pill=s=>`<span class="pill s${Math.max(0,STATUS.indexOf(s))}">${esc(s)}</span>`;
-const empTag=k=>{const e=empCfg(k);return`<span class="emp"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}</span>`};
+const PAL_EMP=['#14B87F','#3B82F6','#A78BFA','#F59E0B','#EC4899','#06B6D4'];
+const corEmp=k=>{const e=empCfg(k),c=String(e.cor||'').replace('#','');if(c.length===6){const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);if(Math.max(r,g,b)-Math.min(r,g,b)>40)return e.cor}const i=Math.max(0,CFG.empresas.findIndex(x=>x.key===k));return PAL_EMP[i%PAL_EMP.length]};
+const empTag=k=>{const e=empCfg(k);return`<span class="emp"><i class="dot" style="background:${corEmp(k)}"></i>${esc(curto(e.nome))}</span>`};
 const curto=n=>String(n).replace(' Coiffeur','');
 function modelos(k){return(CFG.modelos[k]&&CFG.modelos[k].length?CFG.modelos[k]:CFG.modelos.padrao)||[]}
 function preencher(m,l){return m.replace(/\{primeiro\}/g,String(l.Nome||'').split(' ')[0].replace(/^./,c=>c.toUpperCase())).replace(/\{nome\}/g,l.Nome||'')
@@ -407,7 +425,7 @@ notas:{t:'Notas',i:['Anote ideias, reuniões, combinados.','Nota <b>Geral</b> ou
 relatorios:{t:'Relatórios',i:['Faturamento, ticket médio e tempo até fechar dependem de você <b>preencher o valor</b> quando fecha.','<b>Por que perdemos</b> mostra onde a venda está escapando.','<b>Quando chegam</b>: quanto mais verde, mais contatos naquele dia e horário.','<b>⎙ PDF</b> gera o relatório pra mandar pro sócio.']},
 ajustes:{t:'Ajustes',i:['Aqui você muda o painel sem mexer em código.','Mensagens prontas, procedimentos do salão, metas e senhas.','Pra adicionar a Workaé: Empresas → + Adicionar e cole o ID da planilha.','Sempre clique em <b>Salvar ajustes</b> no final.']}
 };
-function caixaDica(v,force){const d=DICAS[v];if(!d)return'';if(!force&&st('pl_dica_'+v)==='x')return'';return`<div class="dica"><button class="x" data-fdica="${v}">×</button><h4>💡 ${d.t}</h4><ul>${d.i.map(x=>`<li>${x}</li>`).join('')}</ul></div>`}
+function caixaDica(v,force){const d=DICAS[v];if(!d)return'';if(!force&&st('pl_dica_'+v)!=='o')return'';return`<div class="dica"><button class="x" data-fdica="${v}">×</button><h4>💡 ${d.t}</h4><ul>${d.i.map(x=>`<li>${x}</li>`).join('')}</ul></div>`}
 function vDicas(){return topo('Dicas e ajuda','Como usar cada parte do painel')+`<div class="panel" style="margin-bottom:14px"><h3>Primeiros passos</h3><ol class="passos" style="padding:0"><li>Abra <b>Hoje</b> todo dia e zere a lista.</li><li>Responda pelo botão do <b>WhatsApp</b> do painel, assim tudo fica registrado.</li><li>Quando a conversa avançar, mude a etapa (lista ou Funil).</li><li>Fechou? Coloque o <b>valor</b>. Perdeu? Escolha o <b>motivo</b>.</li><li>Cliente que chegou por fora do site? <b>＋ Novo contato</b>.</li><li>No celular: Chrome → ⋮ → <b>Instalar app</b>.</li></ol></div><div class="dicas">${Object.keys(DICAS).map(k=>caixaDica(k,true)).join('')}</div>`}
 
 function contHoje(){return tarefasHoje().total}
@@ -423,7 +441,7 @@ function renderSide(){
   });
   h+=`<div class="sec">Empresas</div>`;
   if(PAPEL==='admin')h+=`<button class="nav ${EMP==='all'?'on':''}" data-e="all"><span class="ic2">◎</span>Todas<span class="cnt ${nov('all')?'al':''}">${nov('all')}</span></button>`;
-  CFG.empresas.filter(e=>DB.empresas[e.key]).forEach(e=>h+=`<button class="nav ${EMP===e.key?'on':''}" data-e="${e.key}"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}<span class="cnt ${nov(e.key)?'al':''}">${nov(e.key)}</span></button>`);
+  CFG.empresas.filter(e=>DB.empresas[e.key]).forEach(e=>h+=`<button class="nav ${EMP===e.key?'on':''}" data-e="${e.key}"><i class="dot" style="background:${corEmp(e.key)}"></i>${esc(curto(e.nome))}<span class="cnt ${nov(e.key)?'al':''}">${nov(e.key)}</span></button>`);
   h+=`<div class="side-foot">${DEMO?'<b style="color:#F5D7A8">Modo demonstração</b><br>':''}Atualizado ${new Date(DB.geradoEm).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}<br>${CFG.temSenha?'<a id="sair">Sair</a>':''}<br><button class="tema" id="bTema">${document.body.classList.contains('dark')?'☀ Tema claro':'☾ Tema escuro'}</button></div>`;
   $('#side').innerHTML=h;renderBnav(visiveis,nov);
   $$('.nav[data-v]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.v;STAT='Todos';render();scrollTo(0,0)});
@@ -439,7 +457,7 @@ function renderBnav(vis,nov){
   $$('[data-bv]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.bv;STAT='Todos';render();scrollTo(0,0)});
   $('#bMais').onclick=()=>{
     const it=vis.filter(v=>!PRINC.includes(v[0])).map(([k,i,t])=>`<button class="nav ${VIEW===k?'on':''}" data-mv="${k}"><span class="ic2">${i}</span>${t}</button>`).join('');
-    const em=(PAPEL==='admin'?`<button class="nav ${EMP==='all'?'on':''}" data-me="all"><span class="ic2">◎</span>Todas as empresas<span class="cnt">${nov('all')}</span></button>`:'')+CFG.empresas.filter(e=>DB.empresas[e.key]).map(e=>`<button class="nav ${EMP===e.key?'on':''}" data-me="${e.key}"><i class="dot" style="background:${e.cor}"></i>${esc(curto(e.nome))}<span class="cnt">${nov(e.key)}</span></button>`).join('');
+    const em=(PAPEL==='admin'?`<button class="nav ${EMP==='all'?'on':''}" data-me="all"><span class="ic2">◎</span>Todas as empresas<span class="cnt">${nov('all')}</span></button>`:'')+CFG.empresas.filter(e=>DB.empresas[e.key]).map(e=>`<button class="nav ${EMP===e.key?'on':''}" data-me="${e.key}"><i class="dot" style="background:${corEmp(e.key)}"></i>${esc(curto(e.nome))}<span class="cnt">${nov(e.key)}</span></button>`).join('');
     modal('Menu',`<div class="sheet"><div class="hint" style="margin-bottom:8px">Empresa</div>${em}<div class="hint" style="margin:14px 0 8px">Outras áreas</div>${it}<button class="nav" id="mTema"><span class="ic2">◐</span>${document.body.classList.contains('dark')?'Tema claro':'Tema escuro'}</button>${CFG.temSenha?'<button class="nav" id="mSair"><span class="ic2">⎋</span>Sair</button>':''}</div>`,'<button class="btn" onclick="fecharModal()">Fechar</button>');
     $$('[data-mv]').forEach(b=>b.onclick=()=>{fecharModal();VIEW=b.dataset.mv;STAT='Todos';render();scrollTo(0,0)});
     $$('[data-me]').forEach(b=>b.onclick=()=>{fecharModal();EMP=b.dataset.me;if(['agenda','retornos'].includes(VIEW)&&!temTipo(VIEW==='agenda'?'coworking':'salao'))VIEW='hoje';render()});
@@ -481,7 +499,7 @@ function render(){
   bindTopo();if(V.after)V.after();
   if(window._ultV!==VIEW+EMP){window._ultV=VIEW+EMP;animarNumeros()}else $$('.ring .arc').forEach(a=>a.style.strokeDashoffset=a.dataset.off);
   $$('[data-fdica]').forEach(b=>b.onclick=()=>{sst('pl_dica_'+b.dataset.fdica,'x');if(VIEW!=='dicas')render()});
-  if($('#bDica'))$('#bDica').onclick=()=>{const ab=st('pl_dica_'+VIEW)!=='x'&&$('.dica');if(ab){sst('pl_dica_'+VIEW,'x');render();return}sst('pl_dica_'+VIEW,'');render();const d=$('.dica');if(d){d.scrollIntoView({behavior:'smooth',block:'center'});d.animate([{boxShadow:'0 0 0 4px #0E9F6E'},{boxShadow:'0 0 0 0 transparent'}],{duration:1200})}};
+  if($('#bDica'))$('#bDica').onclick=()=>{const ab=st('pl_dica_'+VIEW)==='o'&&$('.dica');if(ab){sst('pl_dica_'+VIEW,'x');render();return}sst('pl_dica_'+VIEW,'o');render();const d=$('.dica');if(d){d.scrollIntoView({behavior:'smooth',block:'center'});d.animate([{boxShadow:'0 0 0 4px #0E9F6E'},{boxShadow:'0 0 0 0 transparent'}],{duration:1200})}};
 }
 
 /* =================== HOJE =================== */
@@ -515,8 +533,8 @@ function heroDia(t,fh,pc){
   const meta=+CFG.metaMensal||0,perc=meta?Math.min(100,Math.round(fat/meta*100)):0,R=70,C=2*Math.PI*R;
   const ring=`<div class="ring"><svg width="168" height="168" viewBox="0 0 168 168"><circle cx="84" cy="84" r="${R}" fill="none" stroke="var(--line)" stroke-width="12"/><circle class="arc" cx="84" cy="84" r="${R}" fill="none" stroke="url(#gm)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C*(1-perc/100)}"/><defs><linearGradient id="gm" x1="0" x2="1"><stop offset="0" stop-color="#0E9F6E"/><stop offset="1" stop-color="#5EEAB0"/></linearGradient></defs></svg>
     <div class="c">${meta?`<b class="num">${perc}%</b><small>${R$k(fat)} de ${R$k(meta)} na meta do mês</small>`:`<b>${R$k(fat)}</b><small>fechado no mês · defina a meta em Ajustes</small>`}</div></div>`;
-  return`<section class="hero"><div><div class="sau">${saud()} 👋</div><h2>${frase}</h2>
-    <div class="linha"><div class="prog"><i style="width:${pc}%"></i></div><span>${fh} feita${fh!==1?'s':''} hoje</span>${sk?`<span class="streak">🔥 ${sk} dia${sk>1?'s':''} zerando a lista</span>`:''}</div></div>${ring}</section>`;
+  return`<section class="hero ${meta?'':'semring'}"><div><div class="sau">${saud()} 👋</div><h2>${frase}</h2>
+    <div class="linha"><div class="prog"><i style="width:${pc}%"></i></div><span>${fh} feita${fh!==1?'s':''} hoje</span>${sk?`<span class="streak">🔥 ${sk} dia${sk>1?'s':''} zerando a lista</span>`:''}${meta?'':`<span>💰 ${R$k(fat)} fechado no mês</span>`}</div></div>${meta?ring:''}</section>`;
 }
 function quentesHtml(){
   const q=escopo().filter(l=>score(l)>=70).sort((a,b)=>score(b)-score(a)).slice(0,8);
@@ -553,6 +571,23 @@ function animarNumeros(){
   $$('.ring .arc').forEach(a=>requestAnimationFrame(()=>requestAnimationFrame(()=>a.style.strokeDashoffset=a.dataset.off)));
   $$('.kpi .v,.ring .num').forEach(el=>{const m=el.textContent.match(/^(\d+)(%?)$/);if(!m||+m[1]<2)return;const fim=+m[1],suf=m[2],t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);el.textContent=Math.round(fim*e)+suf;if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)});
 }
+function filaHoje(t){
+  const fu=l=>preencher((modelos(l._emp).find(m=>/follow/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l);
+  const dd=l=>Math.floor((Date.now()-new Date(l.Ultimo_Contato||l.Status_Desde||l.Recebido_em))/864e5);
+  const it=[];
+  t.responder.forEach(l=>it.push({l,p:atrasado(l)?0:1,m:'Responder',c:'var(--r)',x:`chegou há ${idade(l)}`,msg:null}));
+  t.follow.forEach(l=>it.push({l,p:2,m:'Follow-up',c:'#3B82F6',x:`lembrete ${fmtDia(l.Lembrete_Em)}`,msg:fu(l)}));
+  t.ret.forEach(x=>it.push({l:x.l,p:3,m:'Retorno',c:'#A78BFA',x:`${esc(x.l.Procedimento||ultimoProc(x.l)?.Procedimento||'')} · ${x.f<0?'venceu há '+(-x.f)+'d':'vence em '+x.f+'d'}`,msg:preencher((modelos(x.l._emp).find(m=>/retorno/i.test(m.t))||{m:''}).m,{...x.l,Procedimento:x.l.Procedimento||ultimoProc(x.l)?.Procedimento,Proximo_Retorno:x.r})}));
+  t.parado.forEach(l=>it.push({l,p:4,m:'Esfriando',c:'#F59E0B',x:`${l._st} · sem contato há ${dd(l)} dias`,msg:fu(l)}));
+  t.reservas.forEach(l=>it.push({l,p:5,m:'Reserva',c:'var(--g)',x:`Baia ${esc(l.Baia||'?')} · ${fmtDia(l.Inicio)}`,msg:preencher((modelos(l._emp).find(m=>/reserva/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)}));
+  it.sort((a,b)=>a.p-b.p);
+  const grp=[],porTel={};
+  it.forEach(i=>{const tel=String(i.l.WhatsApp||'').replace(/\D/g,'').slice(-9),k=(tel.length>=8?tel:'')+'|'+i.m;if(tel.length>=8&&porTel[k]){porTel[k].outras.push(i.l._emp);return}i.outras=[];grp.push(i);if(tel.length>=8)porTel[k]=i});
+  if(!grp.length)return`<div class="fila vazia"><div class="okb">✓</div><b>Tudo em dia</b><span>Ninguém esperando você agora. Bom momento pra postar ou chamar clientes antigos.</span></div>`;
+  const lim=window.FILA_TUDO?999:12;return`<div class="filah"><h3>Pra fazer agora</h3><span>${grp.length} ${grp.length>1?'pessoas':'pessoa'}</span></div><div class="fila">${grp.slice(0,lim).map(i=>{const l=i.l,ec=corEmp(l._emp);
+    return`<div class="fc" style="--ec:${ec}"><div class="fcm" data-open="${esc(l._key)}"><div class="fct"><span class="mot" style="--mc:${i.c}">${i.m}${i.p===0?' · atrasado':''}</span></div><b class="nm">${esc(l.Nome)}</b><div class="emps">${[l._emp,...i.outras].map(k=>`<span class="ep" style="--ec:${corEmp(k)}">${esc(curto(empCfg(k).nome))}</span>`).join('')}</div><div class="det">${i.x}</div></div>
+    <div class="fca">${btnWa(l,i.msg||preencher(modelos(l._emp)[0]?.m||'',l))}<button class="ic" title="Marcar como feito" data-feito="${esc(l._key)}">${ICK}</button></div></div>`}).join('')}</div>${grp.length>lim?`<button class="fmais" onclick="FILA_TUDO=1;render()">Ver mais ${grp.length-lim}</button>`:''}`;
+}
 function vHoje(empN){
   const t=tarefasHoje(),sc=escopo();
   const hojeN=sc.filter(l=>l._dt.toDateString()===new Date().toDateString()).length;
@@ -565,21 +600,16 @@ function vHoje(empN){
   const fh=feitosHoje(),totDia=fh+t.total,pc=totDia?Math.round(fh/totDia*100):100;
   return topo('Hoje',`${sd.charAt(0).toUpperCase()+sd.slice(1)} · ${empN}`)+`
   ${heroDia(t,fh,pc)}
+  ${filaHoje(t)}
   ${quentesHtml()}
-  <div class="grid g2e">${insightsHtml()}${feedHtml()}</div>
   <div class="kpis">
     <div class="kpi ${t.total?'red':'grn'}"><div class="l">Tarefas pra hoje</div><div class="v">${t.total}</div><div class="d">${t.total?'vamos zerar essa lista':'tudo em dia ✓'}</div></div>
     <div class="kpi"><div class="l">Entraram hoje</div><div class="v">${hojeN}</div><div class="d">novos contatos</div></div>
     <div class="kpi"><div class="l">Tempo médio de resposta</div><div class="v">${fmtH(media)}</div><div class="d">últimos 30 dias</div></div>
     <div class="kpi ${sla!==null&&sla<70?'red':'grn'}"><div class="l">Respondidos em até ${CFG.slaHoras}h</div><div class="v">${sla===null?'—':sla+'%'}</div><div class="d">meta de atendimento</div></div>
   </div>
-  <div class="grid g2e">
-    ${bloco('Responder agora','#E5484D',t.responder,l=>itemHoje(l,`${fmtFone(l.WhatsApp)} · chegou há ${idade(l)}`,null,atrasado(l)?'<span class="badge" style="background:var(--rl);color:var(--r)">atrasado</span>':''),'Nenhum contato esperando resposta. 👏')}
-    ${bloco('Follow-ups marcados','#2563EB',t.follow,l=>itemHoje(l,`${l._st} · lembrete ${fmtDia(l.Lembrete_Em)}`,preencher((modelos(l._emp).find(m=>/follow/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)),'Nenhum lembrete pra hoje.')}
-    ${temTipo('salao')?bloco('Retornos do salão','#6D4AFF',t.ret,x=>itemHoje(x.l,`${esc(x.l.Procedimento||ultimoProc(x.l)?.Procedimento||'')} · ${x.f<0?'venceu há '+(-x.f)+'d':'vence em '+x.f+'d'}`,preencher((modelos(x.l._emp).find(m=>/retorno/i.test(m.t))||{m:''}).m,{...x.l,Procedimento:x.l.Procedimento||ultimoProc(x.l)?.Procedimento,Proximo_Retorno:x.r})),'Nenhum retorno vencendo.'):''}
-    ${bloco('Parados há mais de '+CFG.paradoDias+' dias','#D97706',t.parado,l=>itemHoje(l,`${l._st} · sem contato há ${Math.floor((Date.now()-new Date(l.Ultimo_Contato||l.Status_Desde||l.Recebido_em))/864e5)}d`,preencher((modelos(l._emp).find(m=>/follow/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)),'Nenhuma negociação esfriando.')}
-    ${temTipo('coworking')?bloco('Reservas hoje e amanhã','#0E9F6E',t.reservas,l=>itemHoje(l,`Baia ${esc(l.Baia||'?')} · ${fmtDia(l.Inicio)} a ${fmtDia(l.Fim)}`,preencher((modelos(l._emp).find(m=>/reserva/i.test(m.t))||modelos(l._emp)[0]||{m:''}).m,l)),'Nenhuma reserva começando.'):''}
-  </div>`;
+  <div class="grid g2e">${insightsHtml()}${feedHtml()}</div>
+  <div>  </div>`;
 }
 /* =================== PAINEL =================== */
 function vPainel(empN){
