@@ -193,7 +193,7 @@ details.mais>div{display:flex;flex-direction:column;gap:14px}
 body.dark{--bg:#080B0A;--card:#101513;--ink:#ECF1EE;--ink2:#B4BEB8;--mut:#7A8580;--line:#1E2723;--soft:#0C110F;--g:#14B87F;--gd:#3DDC9F;--gl:rgba(20,184,127,.13);--rl:rgba(229,72,77,.15);--al:rgba(217,119,6,.16);--bl:rgba(37,99,235,.18);--vl:rgba(109,74,255,.2);--side:#060908;--side2:#121815}
 body.dark::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(55% 40% at 78% -5%,rgba(20,184,127,.16),transparent 70%),radial-gradient(40% 35% at 10% 105%,rgba(20,184,127,.08),transparent 70%)}
 body.dark::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-body.dark .app,body.dark .bnav{position:relative;z-index:1}
+body.dark .app{position:relative;z-index:1}body.dark .bnav{z-index:25}
 body.dark .side{border-right:1px solid var(--line)}
 body.dark .panel,body.dark .kpi,body.dark .tw{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));backdrop-filter:blur(6px)}
 body.dark .kpi.red{background:linear-gradient(180deg,rgba(229,72,77,.10),rgba(229,72,77,.02));border-color:rgba(229,72,77,.3)}
